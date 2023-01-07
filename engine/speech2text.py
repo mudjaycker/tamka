@@ -3,15 +3,16 @@ import pyaudio
 from functools import lru_cache
 from pathlib import Path
 from queue import Queue
-from text2speech import TamkaSpeaker
 import random as rd
-from word_bank_fr import simples
+from . word_bank_fr import simples
+import os
 
 q = Queue()
-
+MODEL_PATH = os.path.dirname(os.path.abspath(__file__)) + '\\model'
 class TamkaListener:
     def __init__(self,):
-        model = Model(str(Path("models").absolute().resolve()))
+        model = Model(MODEL_PATH)
+
         self.__recognizer = KaldiRecognizer(model, 16000)
         self.result = ""
 
@@ -31,11 +32,11 @@ class TamkaListener:
     
     def run_recognition(self, callable):
         self.__start_microphone()
-        to_say = rd.choice(simples)
+        to_say = (rd.choice(simples)).lower()
         print("Say: ==> ", to_say)
         test = 1
         callback = callable
-        callback(to_say)
+        callback("dites: "+to_say)
         
         while True:
                 test = 0 

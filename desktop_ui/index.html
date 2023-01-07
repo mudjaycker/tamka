@@ -1,12 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="sidebar.css">
     <title>Document</title>
-</head>
-<body>
-    test
-</body>
+  </head>
+  <body>
+
+    <div class="sidebar">
+
+      <div class="hamburger-menu__container">
+        <div class="hamburger-menu">
+          <div class="hamburger-menu__line"></div>
+          <div class="hamburger-menu__line"></div>
+          <div class="hamburger-menu__line"></div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        
+        <nav class="nav__item">
+          <i data-feather="hexagon" class="nav__item-icon"></i>
+          <span class="nav__item-text">Facile</span>
+        </nav>
+
+        <nav class="nav__item">
+          <i data-feather="box" class="nav__item-icon"></i>
+          <span class="nav__item-text">Moyen</span>
+        </nav>
+
+        <nav class="nav__item">
+          <i data-feather="codesandbox" class="nav__item-icon"></i>
+          <span class="nav__item-text">Difficile</span>
+        </nav>
+
+        <!-- <nav class="nav__item">
+          <i data-feather="target" class="nav__item-icon"></i>
+          <span class="nav__item-text">Difficile</span>
+        </nav> -->
+
+        <nav class="nav__item">
+          <i data-feather="log-out" class="nav__item-icon"></i>
+          <span class="nav__item-text">Deconnexion</span>
+        </nav>
+
+      </nav>
+
+    </div>
+    <script src="src/index.js"></script>
+    <script src="./feather_icons.min.js"></script>
+    <script>
+      feather.replace();
+    </script>
+    <script src="./sidebar.js"></script>
+  </body>
 </html>

@@ -4,56 +4,34 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="sidebar.css">
+    <link rel="stylesheet" href="style.css" />
     <title>Document</title>
   </head>
   <body>
-
     <div class="sidebar">
-
-      <div class="hamburger-menu__container">
-        <div class="hamburger-menu">
-          <div class="hamburger-menu__line"></div>
-          <div class="hamburger-menu__line"></div>
-          <div class="hamburger-menu__line"></div>
-        </div>
-      </div>
-
-      <nav class="nav">
-        
-        <nav class="nav__item">
-          <i data-feather="hexagon" class="nav__item-icon"></i>
-          <span class="nav__item-text">Facile</span>
-        </nav>
-
-        <nav class="nav__item">
-          <i data-feather="box" class="nav__item-icon"></i>
-          <span class="nav__item-text">Moyen</span>
-        </nav>
-
-        <nav class="nav__item">
-          <i data-feather="codesandbox" class="nav__item-icon"></i>
-          <span class="nav__item-text">Difficile</span>
-        </nav>
-
-        <!-- <nav class="nav__item">
-          <i data-feather="target" class="nav__item-icon"></i>
-          <span class="nav__item-text">Difficile</span>
-        </nav> -->
-
-        <nav class="nav__item">
-          <i data-feather="log-out" class="nav__item-icon"></i>
-          <span class="nav__item-text">Deconnexion</span>
-        </nav>
-
+      <nav class="side-item">
+        <i data-feather="hexagon" class="item-icon"></i>
+        <span class="item-text">Facile</span>
       </nav>
 
+      <nav class="side-item">
+        <i data-feather="box" class="item-icon"></i>
+        <span class="item-text">Moyen</span>
+      </nav>
+
+      <nav class="side-item">
+        <i data-feather="codepen" class="item-icon"></i>
+        <span class="item-text">Difficile</span>
+      </nav>
+    </div>
+
+    <div class="container">
+      <div class="centerside">center</div>
     </div>
     <script src="src/index.js"></script>
     <script src="./feather_icons.min.js"></script>
     <script>
       feather.replace();
     </script>
-    <script src="./sidebar.js"></script>
   </body>
 </html>

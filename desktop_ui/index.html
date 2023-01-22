@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="./assets/style/style.css" />
     <script src="./third_parts/vue.js"></script>
 
-    <script src="./components/received-msg.js"></script>
-
     <title>Tamka</title>
   </head>
   <body>
@@ -18,7 +16,7 @@
         <div class="sidebar">
           <nav class="side-item">
             <i data-feather="hexagon" class="item-icon"></i>
-            <span class="item-text">Facile</span>
+            <span @click="run_recognition" class="item-text">Facile</span>
           </nav>
 
           <nav class="side-item">
@@ -35,7 +33,6 @@
         <div class="container">
           <div class="centerside">
             <div class="conversation has-text-center">
-                
               <received-msg msg="hello tom"></received-msg>
 
               <div class="msg sent-msg">
@@ -56,7 +53,7 @@
 
               <nav class="task-item">
                 <i data-feather="globe" class="item-icon"></i>
-                <span class="task__item-text">Ma Langue {{show()}}</span>
+                <span class="task__item-text">Ma Langue</span>
               </nav>
             </div>
           </div>
@@ -80,23 +77,22 @@
         </div>
       </div>
     </div>
-      <script>
-        new Vue({
-          el: "#app",
-          data: {
-            age: 32,
+    <script type="text/javascript" src="/eel.js"></script>
+    <script src="./components/received-msg.js"></script>
+    <script>
+      new Vue({
+        el: "#app",
+        data: {},
+        methods: {
+          run_recognition: function () {
+            eel.run_recognition(eel.say);
           },
-          methods: {
-            show: function () {
-              return this.age;
-            },
-          },
-        });
-      </script>
-      <script src="src/index.js"></script>
-      <script src="./third_parts/feather_icons.min.js"></script>
-      <script>
-        feather.replace();
-      </script>
+        },
+      });
+    </script>
+    <script src="./third_parts/feather_icons.min.js"></script>
+    <script>
+      feather.replace();
+    </script>
   </body>
 </html>

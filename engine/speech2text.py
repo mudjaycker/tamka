@@ -1,14 +1,13 @@
 from vosk import Model, KaldiRecognizer
 import pyaudio
 from functools import lru_cache
-from pathlib import Path
-from queue import Queue
 import random as rd
-from . word_bank_fr import simples
+from  word_bank_fr import simples
 import os
+from text2speech import TamkaSpeaker
+from pathlib import Path
 
-q = Queue()
-MODEL_PATH = os.path.dirname(os.path.abspath(__file__)) + '\\model'
+MODEL_PATH = os.path.dirname(os.path.abspath(__file__)) + "\\model"
 class TamkaListener:
     def __init__(self,):
         model = Model(MODEL_PATH)
@@ -36,7 +35,7 @@ class TamkaListener:
         print("Say: ==> ", to_say)
         test = 1
         callback = callable
-        callback("dites: "+to_say)
+        callback(1)
         
         while True:
                 test = 0 
@@ -55,6 +54,9 @@ class TamkaListener:
                 if test == 1:
                     to_say = rd.choice(simples)
                     self.run_recognition(callback)
+
+
+TamkaListener().run_recognition(TamkaSpeaker().say)
                
 
 

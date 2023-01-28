@@ -16,7 +16,7 @@
         <div class="sidebar">
           <nav class="side-item">
             <i data-feather="hexagon" class="item-icon"></i>
-            <span @click="run_recognition" class="item-text">Facile</span>
+            <span class="item-text">Facile</span>
           </nav>
 
           <nav class="side-item">
@@ -53,7 +53,7 @@
 
               <nav class="task-item">
                 <i data-feather="globe" class="item-icon"></i>
-                <span class="task__item-text">Ma Langue</span>
+                <span class="task__item-text">Ma Langue {{show()}}</span>
               </nav>
             </div>
           </div>
@@ -82,14 +82,17 @@
     <script>
       new Vue({
         el: "#app",
-        data: {},
+        data: {
+          age: 32,
+        },
         methods: {
-          run_recognition: function () {
-            eel.run_recognition(eel.say);
+          show: function () {
+            return this.age;
           },
         },
       });
     </script>
+    <script src="src/index.js"></script>
     <script src="./third_parts/feather_icons.min.js"></script>
     <script>
       feather.replace();

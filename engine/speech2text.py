@@ -34,7 +34,7 @@ class TamkaListener:
     def run_recognition(self, callable):
         self.__start_microphone()
         to_say = (rd.choice(simples)).lower()
-        print("Say: ==> ", to_say)
+        print(f"Say: ==> {to_say}")
 
         callback = callable
         callback("dites", to_say)
@@ -60,7 +60,6 @@ class TamkaListener:
                     self.run_recognition(callback)
 
 
-TamkaListener().run_recognition(TamkaSpeaker().say)
                
 
 

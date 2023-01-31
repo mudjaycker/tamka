@@ -145,8 +145,8 @@ html, body {
     'total total'
     ;
     width: 15%;
-    height: fit-content;
-    border: 3px solid white;
+    height: 5%;
+    /* border: 3px solid white; */
     font-size: larger;
     color: white;
 }

@@ -28,7 +28,8 @@ class TamkaListener:
         self.__stream = mic.open(
             format=pyaudio.paInt16,
             channels=1,
-            rate=16000, input=True,
+            rate=16000, 
+            input=True,
             frames_per_buffer=8192
         )
         self.__stream.start_stream()

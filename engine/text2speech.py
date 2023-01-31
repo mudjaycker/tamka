@@ -1,5 +1,10 @@
 import pyttsx3
 import platform
+from pathlib import Path
+from tumiaji import require
+
+eel_path = str(Path(__file__).parent.parent)+"/desktop_ui/init_eel.py"
+eel = require(eel_path).eel
 
 class TamkaSpeaker:
     def __init__(self, rate=130):
@@ -21,6 +26,7 @@ class TamkaSpeaker:
         raise RuntimeError(f"Language '{self.language}' not supported")
 
     def say(self, message):
+        eel.receiveMsg(message)
         self.engine.say(message)
         self.engine.runAndWait()
         # self.engine.stop()

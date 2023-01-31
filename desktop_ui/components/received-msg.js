@@ -1,22 +1,16 @@
-let received_msg = /*html*/`
-              <div class="msg received-msg">
-                <p>{{name}}</p>
-              </div>
-`
-function set_msg() {
-    return "Yeah"
-  }
-eel.expose(set_msg)
-
-Vue.component('received-msg', {
-    data() {
-      return {
-        name: "Test"
-      }
-    },
-    template: received_msg,
-    props: ["msg"],
-    methods: {
-     
-    },
+function receiveMsg(msg) {
+  let element = new Element()
+  let conversation = element.select("conversation")
+  let receivedMsg = element.create({
+    classList: ["msg", "received-msg"],
   })
+  let paragraph = element.create({
+    type: "paragraph",
+    text: msg,
+  })
+
+  element.append(receivedMsg, paragraph)
+  element.append(conversation, receivedMsg)
+}
+
+eel.expose(receiveMsg)

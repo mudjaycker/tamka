@@ -38,35 +38,34 @@ class TamkaListener:
     def __print_text(self, text):
         print(f"\n{text}")
     
-    def run_recognition(self, callable):
-        self.__start_microphone()
+    def run_recognition(self, callable):        
         to_say = (rd.choice(simples)).lower()
-        print(f"Say: ==> {to_say}")
-
         callback = callable
-        callback("dites", to_say)
+        callback("dites " + to_say)
+        
+        self.__start_microphone()
+        print(f"Say: ==> {to_say}")
         
         while True:
                 data = self.__stream.read(4096,  exception_on_overflow=False)
 
                 if self.__recognizer.AcceptWaveform(data):
                     text = self.__recognizer.Result()[14: -3] #slicing the string result
-                    self.__print_text(text)
+                    
+                    if len(text) > 0:
+                        
+                        self.__print_text(text)
+                        eel.sendMessage(text)
 
-                    if text != "" and text == to_say:
-                        self.is_said_well = True
-                        self.said = to_say
-                        print("Success ... ", text)
+                        if text != "" and text == to_say:
+                            self.is_said_well = True
+                            self.said = to_say
+                            print("Success ... ", text)
 
-                    if text != "" and text != to_say:
-                        self.is_said_well = False
-                        print("Failed ... ", text)
+                        if text != "" and text != to_say:
+                            self.is_said_well = False
+                            print("Failed ... ", text)
                     
                 if self.re_run is True:
                     to_say = rd.choice(simples)
                     self.run_recognition(callback)
-
-
-               
-
-

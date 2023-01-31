@@ -3,7 +3,6 @@ from tumiaji import require
 import pyaudio
 from functools import lru_cache
 import random as rd
-import os
 from  . word_bank_fr import simples
 
 from  . text2speech import TamkaSpeaker
@@ -12,7 +11,8 @@ from pathlib import Path
 eel_path = str(Path(__file__).parent.parent)+"/desktop_ui/init_eel.py"
 eel = require(eel_path).eel
 
-MODEL_PATH = os.path.dirname(os.path.abspath(__file__)) + "\\model"
+MODEL_PATH = str(Path(Path(__file__).parent, "model"))
+
 class TamkaListener:
     def __init__(self,):
         model = Model(MODEL_PATH)

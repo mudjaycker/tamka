@@ -98,6 +98,7 @@ html, body {
     min-height: 60px;
     background-color: var(--success-color);
     margin-left: 10px;
+    text-align: center;
 }
 
 .sent-msg{

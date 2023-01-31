@@ -1,10 +1,16 @@
 from vosk import Model, KaldiRecognizer
+from tumiaji import require
 import pyaudio
 from functools import lru_cache
 import random as rd
-from . word_bank_fr import simples
 import os
-from . text2speech import TamkaSpeaker
+from  . word_bank_fr import simples
+
+from  . text2speech import TamkaSpeaker
+from pathlib import Path
+
+eel_path = str(Path(__file__).parent.parent)+"/desktop_ui/init_eel.py"
+eel = require(eel_path).eel
 
 MODEL_PATH = os.path.dirname(os.path.abspath(__file__)) + "\\model"
 class TamkaListener:

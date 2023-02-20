@@ -19,7 +19,7 @@
       <div class="sidebar">
         <nav class="side-item">
           <i data-feather="hexagon" class="item-icon"></i>
-          <span class="item-text">Facile</span>
+          <button onclick="getEasySentences()" class="item-text">Facile</button>
         </nav>
 
         <nav class="side-item">
@@ -36,8 +36,8 @@
       <div class="container">
         <div class="centerside">
           <div id="conversation" class="conversation has-text-center">
-            
-          <!-- machine msg and user msg will be injected here -->
+
+            <!-- machine msg and user msg will be injected here -->
           </div>
 
           <div class="taskbar has-text-center">
@@ -83,6 +83,10 @@
   <script src="./third_parts/feather_icons.min.js"></script>
   <script>
     feather.replace();
+    function getEasySentences() {
+      console.log("yes");
+      eel.start_speaker("facile")
+    }
   </script>
 </body>
 

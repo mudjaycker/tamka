@@ -5,7 +5,6 @@ from functools import lru_cache
 import random as rd
 from  . word_bank_fr import simples
 
-from  . text2speech import TamkaSpeaker
 from pathlib import Path
 
 eel_path = str(Path(__file__).parent.parent)+"/desktop_ui/init_eel.py"
@@ -38,8 +37,8 @@ class TamkaListener:
     def __print_text(self, text):
         print(f"\n{text}")
     
-    def run_recognition(self, callable):        
-        to_say = (rd.choice(simples)).lower()
+    def run_recognition(self, callable, datas):        
+        to_say = (rd.choice(datas)).lower()
         callback = callable
         callback("dites: " + to_say)
         

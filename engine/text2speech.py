@@ -26,7 +26,6 @@ class TamkaSpeaker:
         raise RuntimeError(f"Language '{self.language}' not supported")
 
     def say(self, message):
-        eel.receiveMsg(message[7:])
         if platform.system() == "Linux":
             french_speaker(message)
         else:

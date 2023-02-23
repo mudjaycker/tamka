@@ -1,4 +1,4 @@
-function sendMessage(message) {
+function sayToSystem(message) {
   let element = new Element();
   let conversation = element.select("conversation");
 
@@ -15,7 +15,7 @@ function sendMessage(message) {
   element.append(conversation, userMsg)
 }
 
-eel.expose(sendMessage)
+eel.expose(sayToSystem)
 
 // L´ancienne méthode:
 /*

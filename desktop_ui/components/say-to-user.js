@@ -1,4 +1,4 @@
-function receiveMsg(msg) {
+function systemSayToUser(msg) {
   let element = new Element()
   let conversation = element.select("conversation")
   let receivedMsg = element.create({
@@ -13,4 +13,4 @@ function receiveMsg(msg) {
   element.append(conversation, receivedMsg)
 }
 
-eel.expose(receiveMsg)
+eel.expose(systemSayToUser)

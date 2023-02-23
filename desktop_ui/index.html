@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="background.css" />
   <link rel="stylesheet" href="./assets/style/style.css" />
   <script type="text/javascript" src="/eel.js"></script>
+  <script src="./utils/storage.js"></script>
   <script src="./utils/element.js"></script>
 
   <title>Tamka</title>
@@ -17,9 +18,9 @@
   <div id="app">
     <div class="fixed">
       <div class="sidebar">
-        <nav class="side-item">
+        <nav class="side-item" onclick="getEasySentences()">
           <i data-feather="hexagon" class="item-icon"></i>
-          <button onclick="getEasySentences()" class="item-text">Facile</button>
+          <span class="item-text">Facile</span>
         </nav>
 
         <nav class="side-item">
@@ -77,8 +78,8 @@
       </div>
     </div>
   </div>
-  <script src="./components/received-msg.js"></script>
-  <script src="./components/user_msg.js"></script>
+  <script src="./components/say-to-system.js"></script>
+  <script src="./components/say-to-user.js"></script>
   <script src="src/index.js"></script>
   <script src="./third_parts/feather_icons.min.js"></script>
   <script>

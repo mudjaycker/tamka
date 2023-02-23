@@ -8,7 +8,7 @@ from unsync import unsync
 
 
 def do_say(to_say):
-    receive_msg = threading.Thread(target=eel.receiveMsg, args=(to_say,))
+    receive_msg = threading.Thread(target=eel.systemSayToUser, args=(to_say,))
     speak = threading.Thread(target=TamkaSpeaker().say, args=(to_say,))
     receive_msg.start()
     speak.start()
@@ -21,10 +21,8 @@ def start_speaker(level):
     try:
         text = datas[level].pop()
         to_say = "dites: "+text
-        # do_say_thread = threading.Thread(target=do_say, args=(to_say,))
-        # recognize = threading.Thread(target=TamkaListener().run_recognition)
         do_say(to_say)
-        TamkaListener().run_recognition()
+        TamkaListener().run_recognition(eel.sayToSystem)
 
         
     except IndexError:

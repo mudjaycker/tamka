@@ -33,7 +33,7 @@ class TamkaListener:
     def __print_text(self, text):
         print(f"\n{text}")
     
-    def run_recognition(self):    
+    def run_recognition(self, ui_function):    
         
         self.stream.start_stream()
 
@@ -45,7 +45,7 @@ class TamkaListener:
                     
                     if len(text) > 0:
                         self.__print_text(text)
-                        eel.sendMessage(text)
+                        ui_function(text)
                         
                         self.mic.close(stream=self.stream)
                         self.mic.terminate()

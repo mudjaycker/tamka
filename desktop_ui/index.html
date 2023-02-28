@@ -63,17 +63,17 @@
       <div class="score-screen has-text-center">
         <div class="success-score">
           <p class="underline">Success</p>
-          <p>4</p>
+          <p id="success-points">4</p>
         </div>
 
         <div class="failed-score">
           <p class="underline">Failures</p>
-          <p>2</p>
+          <p id="faillures-points">2</p>
         </div>
 
         <div class="total-phrase">
           <p class="underline">Total</p>
-          <p>10</p>
+          <p id="total-points">10</p>
         </div>
       </div>
     </div>
@@ -85,8 +85,7 @@
   <script>
     feather.replace();
     function getEasySentences() {
-      console.log("yes");
-      eel.start_speaker("facile")
+      eel.start_speaker("easy")
     }
   </script>
 </body>

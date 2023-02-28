@@ -14,19 +14,19 @@ from typing import Any
 tamka_view = TamkaView()
 
 
-def get_from_tamka(type: str, when_is: Any, of_today: bool = True):
-    map_query = {
-        "level": lambda: tamka_view.get_where(lambda t: t.level == when_is
-                                              and t.date_of == date.today()),
-        "success": lambda: tamka_view.get_where(lambda t: t.success == when_is
-                                                and t.date_of == date.today()),
-    } if of_today else {
-        "level": lambda: tamka_view.get_where(lambda t: t.level == when_is),
-        "success": lambda: tamka_view.get_where(lambda t: t.success == when_is),
-    }
+def get_from_tamka(level: str, success: Any, of_today: bool = True):
+    def run_query(): return (tamka_view
+                             .get_where(lambda t: t.success == success
+                                        and t.level == level
+                                        and t.date_of == date.today()
+                                        )
+                             ) if of_today else (tamka_view
+                                                 .get_where(lambda t: t.success == success
+                                                            and t.level == level
+                                                            ))
 
     with db_session():
-        query = map_query.get(type)()
+        query = run_query()
         return query.count() if of_today else [{"text": q.text,
                                                 "level": q.level,
                                                 "success": q.success,

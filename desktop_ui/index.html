@@ -84,8 +84,12 @@
   <script src="./third_parts/feather_icons.min.js"></script>
   <script>
     feather.replace();
-    function getEasySentences() {
-      eel.start_speaker("easy")
+    async function getEasySentences() {
+      let level = "easy"
+      eel.start_speaker(level)
+      let totalPoint = document.getElementById("total-points")
+      totalPoint.innerHTML = await eel.get_datas_length(level)()
+    }
     }
   </script>
 </body>

@@ -4,12 +4,13 @@ import threading
 from engine.speech2text import TamkaListener
 from engine.text2speech import TamkaSpeaker
 from engine.word_bank_fr import datas
+from engine.views import TamkaView
 from unsync import unsync
 
 
-def do_say(to_say):
-    receive_msg = threading.Thread(target=eel.systemSayToUser, args=(to_say,))
-    speak = threading.Thread(target=TamkaSpeaker().say, args=(to_say,))
+def do_say(level, text):
+    receive_msg = threading.Thread(target=eel.systemSayToUser, args=(level, text))
+    speak = threading.Thread(target=TamkaSpeaker().say, args=(text,))
     receive_msg.start()
     speak.start()
     receive_msg.join()

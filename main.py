@@ -46,6 +46,7 @@ def do_say(level, text):
     speak.join()
 
 
+@eel.expose
 @unsync
 def start_speaker(level):
     try:
@@ -69,9 +70,6 @@ def start_speaker(level):
         to_say = "vous avez finis le niveau "+"facile"
         do_say_thread = threading.Thread(target=do_say, args=(level, to_say))
         do_say_thread.start()
-
-
-eel.expose(start_speaker)
 
 
 def start_eel():

@@ -51,11 +51,11 @@ class TamkaListener:
                     text = self.__recognizer.Result()[14: -3] #slicing the string result
                     
                     if len(text) > 0:
-                        self.__print_text(text)
+                        # self.__print_text(text)
                         ui_function(text)
                         
                         self.mic.close(stream=self.stream)
                         self.mic.terminate()
-                        break 
+                        return text
                         
                             

@@ -66,6 +66,8 @@ def start_speaker(level):
         if text.lower() == sayed:
             query_params["success"] = True
             tamka_view.set(**query_params)
+            # total_of_challenged = get_from_tamka(level=level, success=True, of_today=True)
+            eel.setSuccessPoints()
         else:
             tamka_view.set(**query_params)
 

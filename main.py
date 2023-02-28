@@ -70,6 +70,8 @@ def start_speaker(level):
             eel.setSuccessPoints()
         else:
             tamka_view.set(**query_params)
+            # total_of_challenged = get_from_tamka(level=level, success=False, of_today=True)
+            eel.setFailedPoints()
 
     except IndexError:
         to_say = "vous avez finis le niveau "+"facile"

@@ -3,9 +3,15 @@ from tumiaji import require
 import pyaudio
 from functools import lru_cache
 from pathlib import Path
+import os
 
 eel_path = str(Path(__file__).parent.parent)+"/desktop_ui/init_eel.py"
 eel = require(eel_path).eel
+song_path = str(Path(Path(__file__).parent, "ROBTVox_Notification.wav"))
+
+def play(song_path: str):
+    cmd = "play " + song_path
+    os.system(cmd)
 
 
 MODEL_PATH = str(Path(Path(__file__).parent, "model"))
@@ -36,6 +42,7 @@ class TamkaListener:
     def run_recognition(self, ui_function):    
         
         self.stream.start_stream()
+        play(song_path)
 
         while True:
                 data = self.stream.read(4096,  exception_on_overflow=False)

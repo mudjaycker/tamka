@@ -1,6 +1,6 @@
 from pony import orm
 from . db_models import Tamka
-from typing import List
+from datetime import date
 
 
 class TamkaView:
@@ -11,10 +11,10 @@ class TamkaView:
         with orm.db_session():
             Tamka(**kwargs)
 
-    def get_by_level(self, level: str) -> List[Tamka]:
+    def get_where(self, condition) -> Tamka:
         with orm.db_session():
-            t = Tamka.select(lambda t: t.level == level)[:]
-        return t
+            querry = Tamka.select(condition)
+        return querry
     
     # def update(self, text:str, success:bool, date_of:datetime):
         # with orm.db_session():
@@ -24,6 +24,9 @@ class TamkaView:
 
 #Full database
 # view = TamkaView()
+# with orm.db_session():
+    # x = view.get_where(lambda t: t.date_of == date.today() and t.success == False).count()
+    # print(x)
 
 # orm.set_sql_debug(True)
 # view.update(text="Unité Travail Progrès", success=True, date_of=datetime.now())

@@ -19,28 +19,39 @@ def do_say(level, text):
     
 @unsync    
 def start_speaker(level):
+    tamka_view = TamkaView()
     try:
         text = datas[level].pop()
         to_say = "dites: "+text
-        do_say(to_say)
-        TamkaListener().run_recognition(eel.sayToSystem)
-
+        do_say(level, to_say)
+        sayed = TamkaListener().run_recognition(eel.sayToSystem)
+        query_params = {
+            "text": text,
+            "success": False,
+            "level": level
+        }
         
+        if text.lower() == sayed:
+            query_params["success"] = True
+            tamka_view.set(**query_params)
+        else:
+            tamka_view.set(**query_params)
+                
     except IndexError:
-        to_say = "vous avez finis le niveau "+level
-        do_say_thread = threading.Thread(target=do_say, args=(to_say,))
+        to_say = "vous avez finis le niveau "+"facile"
+        do_say_thread = threading.Thread(target=do_say, args=(level, to_say))
         do_say_thread.start()
 
-
 eel.expose(start_speaker)
+
 def start_eel():
     eel.start("index.html", mode=None)
 
 
-eel_thread = threading.Thread(target=start_eel)
+# eel_thread = threading.Thread(target=start_eel)
+# eel_thread.start()
 
-eel_thread.start()
-# eel.start("index.html", mode="chrome")
+eel.start("index.html", mode="chrome")
 
-webview.create_window('Tamka', 'http://localhost:8000/index.html')
-webview.start()
+# webview.create_window('Tamka', 'http://localhost:8000/index.html')
+# webview.start(debug=True)

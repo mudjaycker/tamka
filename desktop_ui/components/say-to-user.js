@@ -1,4 +1,5 @@
-function systemSayToUser(msg) {
+function systemSayToUser(level, toSay) {
+
   let element = new Element()
   let conversation = element.select("conversation")
   let receivedMsg = element.create({
@@ -6,7 +7,7 @@ function systemSayToUser(msg) {
   })
   let paragraph = element.create({
     type: "paragraph",
-    text: msg,
+    text: toSay,
   })
 
   element.append(receivedMsg, paragraph)

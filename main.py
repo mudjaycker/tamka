@@ -14,19 +14,22 @@ from typing import Any
 tamka_view = TamkaView()
 
 
+@eel.expose
+def get_datas_length(level):
+    return len(datas[level])
+
+
 def get_from_tamka(level: str, success: Any, of_today: bool = True):
-    def run_query(): return (tamka_view
-                             .get_where(lambda t: t.success == success
-                                        and t.level == level
-                                        and t.date_of == date.today()
-                                        )
-                             ) if of_today else (tamka_view
-                                                 .get_where(lambda t: t.success == success
-                                                            and t.level == level
-                                                            ))
 
     with db_session():
-        query = run_query()
+        query = (tamka_view.get_where(lambda t: t.success == success
+                                      and t.level == level
+                                      and t.date_of == date.today()
+                                      )
+                 ) if of_today else (tamka_view.get_where(lambda t: t.success == success
+                                                          and t.level == level
+                                                          ))
+
         return query.count() if of_today else [{"text": q.text,
                                                 "level": q.level,
                                                 "success": q.success,

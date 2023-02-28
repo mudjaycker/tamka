@@ -4,3 +4,4 @@ engine/__pycache__/
 engine/model/
 engine/*.sqlite
 tempo.wav
+needs.txt

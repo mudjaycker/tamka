@@ -90,6 +90,11 @@
       let totalPoint = document.getElementById("total-points")
       totalPoint.innerHTML = await eel.get_datas_length(level)()
     }
+
+    function setSuccessPoints(){
+      let successPoints = document.getElementById("success-points")
+      successPoints.innerHTML = Number(successPoints.textContent) + 1
+    }
     }
   </script>
 </body>

@@ -1,6 +1,7 @@
 __pycache__/
 engine/__pycache__/
 .vscode/
+engine/.vscode
 engine/model/
 engine/*.sqlite
 tempo.wav

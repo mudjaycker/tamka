@@ -19,19 +19,23 @@
       <div id="home">
         <div class="fixed">
           <div class="sidebar">
-            <nav class="side-item" onclick="getEasySentences()">
+            <nav class="side-item" onclick="getSentences('easy')">
               <i data-feather="hexagon" class="item-icon"></i>
               <span class="item-text">Facile</span>
             </nav>
 
             <nav class="side-item">
               <i data-feather="box" class="item-icon"></i>
-              <span class="item-text">Moyen</span>
+              <span class="item-text" onclick="getSentences('medium')"
+                >Moyen</span
+              >
             </nav>
 
             <nav class="side-item">
               <i data-feather="codepen" class="item-icon"></i>
-              <span class="item-text">Difficile</span>
+              <span class="item-text" onclick="getSentences('hard')"
+                >Difficile</span
+              >
             </nav>
           </div>
 
@@ -47,7 +51,8 @@
                   <span
                     class="task__item-text"
                     onclick="goto('./components/statiscs.html')"
-                  >Statistics</span>
+                    >Statistics</span
+                  >
                 </nav>
 
                 <nav class="task-item">
@@ -90,12 +95,11 @@
     <script>
       feather.replace();
 
-      function goto(url){
-        window.location.replace(url)
+      function goto(url) {
+        window.location.replace(url);
       }
 
-      async function getEasySentences() {
-        let level = "easy";
+      async function getSentences(level) {
         eel.start_speaker(level);
         let totalPoint = document.getElementById("total-points");
         totalPoint.innerHTML = await eel.get_datas_length(level)();

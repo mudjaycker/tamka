@@ -19,6 +19,11 @@ html, body {
     justify-content: center;
     contain: content;
     overflow: clip;
+  }
+
+  #home{
+    height: 100vh;
+    width: 100vw;
     background-image: url("../images/hd-wallpaper-3605547.jpg");
     background-repeat: no-repeat;
     background-size: 100% 100%;

@@ -5,7 +5,6 @@ from engine.speech2text import TamkaListener
 from engine.text2speech import TamkaSpeaker
 from engine.word_bank_fr import datas
 from engine.views import TamkaView
-from unsync import unsync
 from pony.orm import db_session
 from datetime import date
 from typing import Any
@@ -49,8 +48,7 @@ def do_say(level, text):
     speak.join()
 
 
-@eel.expose
-@unsync
+
 def start_speaker(level):
     try:
         text = datas[level].pop()
@@ -77,7 +75,9 @@ def start_speaker(level):
         to_say = "vous avez finis le niveau "+"facile"
         do_say_thread = threading.Thread(target=do_say, args=(level, to_say))
         do_say_thread.start()
-
+        
+expose_start_speaker = threading.Thread(target=eel.expose(start_speaker))
+expose_start_speaker.start()
 
 def start_eel():
     eel.start("index.html", mode=None)
@@ -89,4 +89,4 @@ def start_eel():
 eel.start("index.html", mode="chrome")
 
 # webview.create_window('Tamka', 'http://localhost:8000/index.html')
-# webview.start(debug=False)
+# webview.start(debug=True)

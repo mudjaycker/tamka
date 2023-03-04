@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type='text/javascript' src="/eel.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="ICT"><a href="/">back to the</a></div>
+    <div>
+      <canvas id="myChart"></canvas>
+    </div>
+  </body>
+  <script src="../third_parts/chart.js"></script>
+  <script>
+    const ctx = document.getElementById("myChart");
+
+    new Chart(ctx, {
+      type: "polarArea",
+      data: {
+        labels: ["Easy", "Moyen", "Hard"],
+        datasets: [
+          {
+            label: "# of Votes",
+            data: [8.43, 26, 9],
+            fill: true,
+            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            borderColor: "rgb(255, 99, 132)",
+            pointBackgroundColor: "rgb(255, 99, 132)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgb(255, 99, 132)",
+          },
+          {
+            label: "# choosing",
+            data: [9, 20, 25],
+            fill: true,
+            backgroundColor: "rgba(54, 162, 235, 0.2)",
+            borderColor: "rgb(54, 162, 235)",
+            pointBackgroundColor: "rgb(54, 162, 235)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgb(54, 162, 235)",
+          },
+          {
+            label: "# third type",
+            data: [10, 8, 13],
+            fill: true,
+            backgroundColor: "#0e4b5917",
+            borderColor: "#4e1a2556",
+            pointBackgroundColor: "#4e1a2556",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "#4e1a2556",
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+        elements: {
+          line: {
+            borderWidth: 3,
+          },
+        },
+      },
+    });
+  </script>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    canvas {
+      width: 600px !important;
+      height: 600px !important;
+    }
+    .ICT {
+      justify-self: flex-start;
+    }
+    .ICT button {
+      font-size: larger;
+      color: red;
+      background-color: aquamarine;
+      width: 100px;
+      height: 100px;
+    }
+  </style>
+</html>

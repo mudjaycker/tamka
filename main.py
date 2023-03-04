@@ -13,6 +13,10 @@ from typing import Any
 
 tamka_view = TamkaView()
 
+@eel.expose
+def get_datas_length(level):
+    return len(datas[level])
+
 with db_session():
     tamka_qty = tamka_view.get_where(lambda x: x).count()
 

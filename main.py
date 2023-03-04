@@ -13,14 +13,17 @@ from typing import Any
 
 tamka_view = TamkaView()
 
+with db_session():
+    tamka_qty = tamka_view.get_where(lambda x: x).count()
+
 
 @eel.expose
-def get_datas_length(level):
-    return len(datas[level])
+def get_tamka_qty():
+    return tamka_qty
 
 
+@eel.expose
 def get_from_tamka(level: str, success: Any, of_today: bool = True):
-
     with db_session():
         query = (tamka_view.get_where(lambda t: t.success == success
                                       and t.level == level
@@ -29,14 +32,7 @@ def get_from_tamka(level: str, success: Any, of_today: bool = True):
                  ) if of_today else (tamka_view.get_where(lambda t: t.success == success
                                                           and t.level == level
                                                           ))
-
-        return query.count() if of_today else [{"text": q.text,
-                                                "level": q.level,
-                                                "success": q.success,
-                                                "date_of": q.date_of
-                                                } for q in query[:]]
-
-# print(get_from_tamka("success", when_is=True, of_today=False))
+        return query.count()
 
 
 def do_say(level, text):
@@ -63,12 +59,12 @@ def start_speaker(level):
             "level": level
         }
 
-        if text.lower() == sayed: #on sayed well
+        if text.lower() == sayed:  # on sayed well
             query_params["success"] = True
             tamka_view.set(**query_params)
             # total_of_challenged = get_from_tamka(level=level, success=True, of_today=True)
             eel.setSuccessPoints()
-        else: #on sayed bad
+        else:  # on sayed bad
             tamka_view.set(**query_params)
             # total_of_challenged = get_from_tamka(level=level, success=False, of_today=True)
             eel.setFailedPoints()
@@ -89,4 +85,4 @@ def start_eel():
 eel.start("index.html", mode="chrome")
 
 # webview.create_window('Tamka', 'http://localhost:8000/index.html')
-# webview.start(debug=True)
+# webview.start(debug=False)

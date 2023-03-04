@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type='text/javascript' src="/eel.js"></script>
+    <script type="text/javascript" src="/eel.js"></script>
+    <script src="../utils/storage.js"></script>
     <title>Document</title>
   </head>
   <body>
@@ -14,46 +15,48 @@
     </div>
   </body>
   <script src="../third_parts/chart.js"></script>
+
   <script>
+    //Auto setting value in local storage
+    (async () => {
+      let storage = new InStore();
+      let total_qty = await eel.get_tamka_qty()();
+      let easy_qty = await eel.get_from_tamka("easy", true, false)();
+      let medium_qty = await eel.get_from_tamka("medium", true, false)();
+      let hard_qty = await eel.get_from_tamka("hard", true, false)();
+      storage.set("quantities", { easy_qty, total_qty, medium_qty, hard_qty });
+    })();
+  </script>
+
+  <script>
+    let storage = new InStore();
     const ctx = document.getElementById("myChart");
+    let { easy_qty, total_qty, medium_qty, hard_qty } =
+      storage.get("quantities");
 
     new Chart(ctx, {
-      type: "polarArea",
+      type: "bar",
       data: {
-        labels: ["Easy", "Moyen", "Hard"],
+        labels: ["easy", "medium", "hard"],
         datasets: [
           {
-            label: "# of Votes",
-            data: [8.43, 26, 9],
-            fill: true,
-            backgroundColor: "rgba(255, 99, 132, 0.2)",
-            borderColor: "rgb(255, 99, 132)",
-            pointBackgroundColor: "rgb(255, 99, 132)",
-            pointBorderColor: "#fff",
-            pointHoverBackgroundColor: "#fff",
-            pointHoverBorderColor: "rgb(255, 99, 132)",
-          },
-          {
-            label: "# choosing",
-            data: [9, 20, 25],
-            fill: true,
-            backgroundColor: "rgba(54, 162, 235, 0.2)",
-            borderColor: "rgb(54, 162, 235)",
-            pointBackgroundColor: "rgb(54, 162, 235)",
-            pointBorderColor: "#fff",
-            pointHoverBackgroundColor: "#fff",
-            pointHoverBorderColor: "rgb(54, 162, 235)",
-          },
-          {
-            label: "# third type",
-            data: [10, 8, 13],
-            fill: true,
-            backgroundColor: "#0e4b5917",
-            borderColor: "#4e1a2556",
-            pointBackgroundColor: "#4e1a2556",
-            pointBorderColor: "#fff",
-            pointHoverBackgroundColor: "#fff",
-            pointHoverBorderColor: "#4e1a2556",
+            label: "Pronounciation Statistics",
+            data: [
+              easy_qty / total_qty,
+              medium_qty / total_qty,
+              hard_qty / total_qty,
+            ],
+            backgroundColor: [
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(255, 159, 64, 0.2)",
+              "rgb(255, 99, 132, 0.2)",
+            ],
+            borderColor: [
+              "rgb(75, 192, 192)",
+              "rgb(255, 159, 64)",
+              "rgb(255, 99, 132)",
+            ],
+            borderWidth: 1,
           },
         ],
       },
@@ -78,18 +81,8 @@
       align-items: center;
     }
     canvas {
-      width: 600px !important;
-      height: 600px !important;
-    }
-    .ICT {
-      justify-self: flex-start;
-    }
-    .ICT button {
-      font-size: larger;
-      color: red;
-      background-color: aquamarine;
-      width: 100px;
-      height: 100px;
+      width: 800px !important;
+      height: 400px !important;
     }
   </style>
 </html>

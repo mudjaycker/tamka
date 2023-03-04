@@ -63,12 +63,12 @@ def start_speaker(level):
             "level": level
         }
 
-        if text.lower() == sayed:
+        if text.lower() == sayed: #on sayed well
             query_params["success"] = True
             tamka_view.set(**query_params)
             # total_of_challenged = get_from_tamka(level=level, success=True, of_today=True)
             eel.setSuccessPoints()
-        else:
+        else: #on sayed bad
             tamka_view.set(**query_params)
             # total_of_challenged = get_from_tamka(level=level, success=False, of_today=True)
             eel.setFailedPoints()

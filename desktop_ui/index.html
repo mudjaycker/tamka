@@ -46,8 +46,8 @@
                   <i data-feather="bar-chart-2" class="item-icon"></i>
                   <span
                     class="task__item-text"
-                    ><a href="./components/statiscs.html">Stats</a></span
-                  >
+                    onclick="goto('./components/statiscs.html')"
+                  >Statistics</span>
                 </nav>
 
                 <nav class="task-item">
@@ -89,6 +89,10 @@
     <script src="./third_parts/feather_icons.min.js"></script>
     <script>
       feather.replace();
+
+      function goto(url){
+        window.location.replace(url)
+      }
 
       async function getEasySentences() {
         let level = "easy";

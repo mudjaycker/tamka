@@ -95,7 +95,7 @@ def start_speaker(language, level):
         to_say = ("vous avez finis le niveau " +
                   french_level_map[level]
                   if language == "français"
-                  else f"you finish the {level} level"
+                  else f"You have finished the {level} level"
                   )
 
         do_say_thread = threading.Thread(target=do_say, args=(language, level, to_say))

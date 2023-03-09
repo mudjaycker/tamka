@@ -93,7 +93,7 @@
             </div>
 
             <div class="total-phrase">
-              <p class="underline">Total</p>
+              <p id="remaining-words" class="underline">Reste</p>
               <p id="total-points"></p>
             </div>
           </div>
@@ -115,9 +115,9 @@
       }
 
       async function getSentences(level) {
-        eel.start_speaker(level);
+        eel.start_speaker(getLanguage(), level);
         let totalPoint = document.getElementById("total-points");
-        totalPoint.innerHTML = await eel.get_datas_length(level)();
+        totalPoint.innerHTML = await eel.get_datas_length(getLanguage(), level)();
       }
 
       function setSuccessPoints() {
@@ -136,24 +136,27 @@
       let lang = document.getElementById("lang");
       let success = document.getElementById("success");
       let failures = document.getElementById("failures");
+      let remainingWords = document.getElementById("remaining-words");
 
       function english() {
         choiceEasy.innerHTML = "Easy";
         choiceMedium.innerHTML = "Medium";
-        choiceHard, (innerHTML = "Hard");
+        choiceHard.innerHTML = "Hard";
         showStatistics.innerHTML = "Show Statistics";
         lang.innerHTML = "French language";
         success.innerHTML = "Success";
         failures.innerHTML = "Failures";
+        remainingWords.innerHTML = "Remaing Words";
       }
       function français() {
         choiceEasy.innerHTML = "Facile";
         choiceMedium.innerHTML = "Moyen";
-        choiceHard, (innerHTML = "Difficile");
+        choiceHard.innerHTML = "Difficile";
         showStatistics.innerHTML = "Voir les statistiques";
         lang.innerHTML = "Langue anglaise";
         success.innerHTML = "Réussites";
         failures.innerHTML = "Échecs";
+        remainingWords.innerHTML = "Mots Restants"
       }
       
       let langMap = { english, français };

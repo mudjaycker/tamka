@@ -14,12 +14,12 @@ def play(song_path: str):
     os.system(cmd)
 
 
-MODEL_PATH = str(Path(Path(__file__).parent, "model"))
 
 class TamkaListener:
-    def __init__(self,):
+    def __init__(self, language="français"):
+        MODEL_PATH = str(Path(Path(__file__).parent, language+"_model"))
         model = Model(MODEL_PATH)
-
+        
         self.__recognizer = KaldiRecognizer(model, 16000)
         self.result = ""
         self.is_running = False

@@ -8,7 +8,7 @@ class Tamka(db.Entity):
     text = orm.Required(str)
     success = orm.Optional(bool)
     date_of = orm.Required(date, default=date.today())
-    # language = orm.Required(str, 8)
+    language = orm.Required(str)
     level = orm.Required(str)
 
 db.bind(provider='sqlite', filename='database.sqlite', create_db=True)

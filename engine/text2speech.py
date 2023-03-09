@@ -2,20 +2,22 @@ import pyttsx3
 import platform
 from pathlib import Path
 from tumiaji import require
-from . ubuntu_speaker import french_speaker
+from . ubuntu_speaker import speaker
 
 eel_path = str(Path(__file__).parent.parent)+"/desktop_ui/init_eel.py"
 eel = require(eel_path).eel
 
+
 class TamkaSpeaker:
-    def __init__(self, rate=130):
-        self.language = "fr-fr".upper()
+    def __init__(self, language="français"):
+        self.rate=130,
+        self.language = language
+        self.win_lang = language
         self.engine = pyttsx3.init()
-        self.engine.setProperty('rate', rate)
+        self.engine.setProperty('self.rate', self.rate)
 
         if platform.system() == "Windows":
             self.set_language()
-
 
     def set_language(self):
         for voice in self.engine.getProperty('voices'):
@@ -27,10 +29,13 @@ class TamkaSpeaker:
 
     def say(self, message):
         if platform.system() == "Linux":
-            french_speaker(message)
+            speaker(message, self.language)
         else:
+            if self.language == "français":
+                self.win_lang = "fr-fr".upper()
+            else:
+                self.win_lang = "eng-us".upper()
+
             self.engine.say(message)
             self.engine.runAndWait()
         # self.engine.stop()
-
-

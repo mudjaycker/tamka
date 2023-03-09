@@ -128,9 +128,7 @@
         let failedPoints = document.getElementById("failed-points");
         failedPoints.innerHTML = Number(failedPoints.textContent) + 1;
       }
-      eel.expose(setSuccessPoints);
-      eel.expose(setFailedPoints);
-
+      
       let choiceEasy = document.getElementById("choice-easy");
       let choiceMedium = document.getElementById("choice-medium");
       let choiceHard = document.getElementById("choice-hard");
@@ -157,7 +155,7 @@
         success.innerHTML = "Réussites";
         failures.innerHTML = "Échecs";
       }
-
+      
       let langMap = { english, français };
       langMap[store.get("language").type]();
 
@@ -173,6 +171,13 @@
           console.log("english language is set");
         },
       };
+
+      function getLanguage(){
+        return store.get("language").type;
+      }
+      eel.expose(setSuccessPoints);
+      eel.expose(setFailedPoints);
+      eel.expose(getLanguage)
     </script>
   </body>
 </html>

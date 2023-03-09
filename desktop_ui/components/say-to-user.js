@@ -12,6 +12,9 @@ function systemSayToUser(level, toSay) {
 
   element.append(receivedMsg, paragraph)
   element.append(conversation, receivedMsg)
+
+  let centerSide = document.getElementById('center')
+  centerSide.scrollTop = centerSide.scrollHeight
 }
 
 eel.expose(systemSayToUser)

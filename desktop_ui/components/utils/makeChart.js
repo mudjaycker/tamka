@@ -1,7 +1,7 @@
 setTimeout(() => {
   let storage = new InStore();
   let language = storage.get("language").type;
-  
+
   const ctx = document.getElementById("myChart");
 
   let language_type = language + "_language";
@@ -36,9 +36,9 @@ setTimeout(() => {
         {
           label: languageMap[language].title,
           data: [
-            easy_qty / total_qty,
-            medium_qty / total_qty,
-            hard_qty / total_qty,
+            (easy_qty * 100) / total_qty,
+            (medium_qty * 100) / total_qty,
+            (hard_qty * 100) / total_qty,
           ],
           backgroundColor: [
             "rgba(75, 192, 192, 0.2)",
@@ -58,6 +58,13 @@ setTimeout(() => {
       scales: {
         y: {
           beginAtZero: true,
+          min: 0,
+          max: 100,
+          ticks: {
+            callback: function (value, index, values) {
+              return value + " %";
+            },
+          },
         },
       },
       elements: {

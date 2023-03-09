@@ -11,6 +11,7 @@
     <script src="./utils/element.js"></script>
     <script src="./utils/spa.js" defer></script>
 
+
     <title>Tamka</title>
   </head>
 
@@ -21,19 +22,25 @@
           <div class="sidebar">
             <nav class="side-item" onclick="getSentences('easy')">
               <i data-feather="hexagon" class="item-icon"></i>
-              <span class="item-text">Facile</span>
+              <span id="choice-easy" class="item-text">Facile</span>
             </nav>
 
             <nav class="side-item">
               <i data-feather="box" class="item-icon"></i>
-              <span class="item-text" onclick="getSentences('medium')"
+              <span
+                id="choice-medium"
+                class="item-text"
+                onclick="getSentences('medium')"
                 >Moyen</span
               >
             </nav>
 
             <nav class="side-item">
               <i data-feather="codepen" class="item-icon"></i>
-              <span class="item-text" onclick="getSentences('hard')"
+              <span
+                id="choice-hard"
+                class="item-text"
+                onclick="getSentences('hard')"
                 >Difficile</span
               >
             </nav>
@@ -49,20 +56,26 @@
                 <nav class="task-item">
                   <i data-feather="bar-chart-2" class="item-icon"></i>
                   <span
+                    id="show-statistics"
                     class="task__item-text"
                     onclick="goto('./components/statiscs.html')"
                     >Statistics</span
                   >
                 </nav>
 
-                <nav class="task-item">
-                  <i data-feather="list" class="item-icon"></i>
-                  <span class="task__item-text">Liste Des Défis</span>
-                </nav>
+                <!-- <nav class="task-item"> -->
+                <!-- <i data-feather="list" class="item-icon"></i> -->
+                <!-- <span class="task__item-text">Liste Des Défis</span> -->
+                <!-- </nav> -->
 
                 <nav class="task-item">
                   <i data-feather="globe" class="item-icon"></i>
-                  <span class="task__item-text">Ma Langue </span>
+                  <span
+                    id="lang"
+                    class="task__item-text"
+                   onclick="setLangMap[store.get('language').type]()"
+                    >Ma Langue
+                  </span>
                 </nav>
               </div>
             </div>
@@ -70,12 +83,12 @@
 
           <div class="score-screen has-text-center">
             <div class="success-score">
-              <p class="underline">Success</p>
+              <p id="success" class="underline">Success</p>
               <p id="success-points">0</p>
             </div>
 
             <div class="failed-score">
-              <p class="underline">Failures</p>
+              <p id="failures" class="underline">Failures</p>
               <p id="failed-points">0</p>
             </div>
 
@@ -94,6 +107,8 @@
     <script src="./third_parts/feather_icons.min.js"></script>
     <script>
       feather.replace();
+      const store = new InStore();
+      //store.set("language", {type: "english"})
 
       function goto(url) {
         window.location.href = url;
@@ -115,6 +130,49 @@
       }
       eel.expose(setSuccessPoints);
       eel.expose(setFailedPoints);
+
+      let choiceEasy = document.getElementById("choice-easy");
+      let choiceMedium = document.getElementById("choice-medium");
+      let choiceHard = document.getElementById("choice-hard");
+      let showStatistics = document.getElementById("show-statistics");
+      let lang = document.getElementById("lang");
+      let success = document.getElementById("success");
+      let failures = document.getElementById("failures");
+
+      function english() {
+        choiceEasy.innerHTML = "Easy";
+        choiceMedium.innerHTML = "Medium";
+        choiceHard, (innerHTML = "Hard");
+        showStatistics.innerHTML = "Show Statistics";
+        lang.innerHTML = "French language";
+        success.innerHTML = "Success";
+        failures.innerHTML = "Failures";
+      }
+      function français() {
+        choiceEasy.innerHTML = "Facile";
+        choiceMedium.innerHTML = "Moyen";
+        choiceHard, (innerHTML = "Difficile");
+        showStatistics.innerHTML = "Voir les statistiques";
+        lang.innerHTML = "Langue anglaise";
+        success.innerHTML = "Réussites";
+        failures.innerHTML = "Échecs";
+      }
+
+      let langMap = { english, français };
+      langMap[store.get("language").type]();
+
+      let setLangMap = {
+        english: () => {
+          store.set("language", { type: "français" });
+          langMap[store.get("language").type]();
+          console.log("french language is set");
+        },
+        français: () => {
+          store.set("language", { type: "english" });
+          langMap[store.get("language").type]();
+          console.log("english language is set");
+        },
+      };
     </script>
   </body>
 </html>

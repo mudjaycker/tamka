@@ -14,8 +14,8 @@ tamka_view = TamkaView()
 
 
 @eel.expose
-def get_datas_length(level):
-    if eel.getLanguage()() == "français":
+def get_datas_length(language, level):
+    if language == "français":
         return len(french_datas[level])
     else:
         return len(english_datas[level])
@@ -45,11 +45,11 @@ def get_from_tamka(language, level: str, success: bool = True, of_today: bool = 
 
 
 
-def do_say(level, text):
+def do_say(language, level, text):
     receive_msg = threading.Thread(
         target=eel.systemSayToUser, args=(level, text))
 
-    speaker = TamkaSpeaker(eel.getLanguage()())
+    speaker = TamkaSpeaker(language)
     speak = threading.Thread(target=speaker.say, args=(text,))
     receive_msg.start()
     speak.start()
@@ -57,23 +57,23 @@ def do_say(level, text):
     speak.join()
 
 
-def start_speaker(level):
+def start_speaker(language, level):
     try:
         text = (french_datas[level].pop()
-                if eel.getLanguage()() == 'français'
+                if language == 'français'
                 else english_datas[level].pop()
                 )
 
-        to_say = "dites: "+text if eel.getLanguage()() == 'français' else "say: "+text
-        do_say(level, to_say)
+        to_say = "dites: "+text if language == 'français' else "say: "+text
+        do_say(language, level, to_say)
 
-        listener = TamkaListener(eel.getLanguage()())
+        listener = TamkaListener(language)
         sayed = listener.run_recognition(eel.sayToSystem)
         query_params = {
             "text": text,
             "success": False,
             "level": level,
-            "language": eel.getLanguage()()
+            "language": language
         }
 
         if text.lower() == sayed:  # on sayed well
@@ -94,11 +94,11 @@ def start_speaker(level):
 
         to_say = ("vous avez finis le niveau " +
                   french_level_map[level]
-                  if eel.getLanguage()() == "français"
+                  if language == "français"
                   else f"you finish the {level} level"
                   )
 
-        do_say_thread = threading.Thread(target=do_say, args=(level, to_say))
+        do_say_thread = threading.Thread(target=do_say, args=(language, level, to_say))
         do_say_thread.start()
 
 

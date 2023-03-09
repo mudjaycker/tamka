@@ -8,7 +8,7 @@ def speaker(text: str, language):
     if language == "français":
         cmd_speaker = f"""pico2wave -l fr-FR -w tempo.wav "{text}" && play -qV0 tempo.wav treble 20 gain -l 6 tempo 0.7 """ 
     else:
-        cmd_speaker = f"""pico2wave -l en-US -w tempo.wav "{text}" && play -qV0 tempo.wav treble 20 gain -l 6 tempo 0.7 """ 
+        cmd_speaker = f"""pico2wave -l en-US -w tempo.wav "{text}" && play -qV0 tempo.wav treble 5 gain -l 5 tempo 0.85 """ 
     # player_command = ["play", "tempo.wav"]
     # run_command = subprocess.Popen(shlex.split(cmd_speaker))
     # speak = subprocess.Popen(player_command)
@@ -17,6 +17,3 @@ def speaker(text: str, language):
     # speak.wait()
     
     #os.remove("tempo.wav")
-
-    
-#french_speaker("Bienvenue au bouroundi mon pays")

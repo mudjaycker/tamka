@@ -1,4 +1,4 @@
-function systemSayToUser(level, toSay) {
+function systemSayToUser(toSay) {
 
   let element = new Element()
   let conversation = element.select("conversation")

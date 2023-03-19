@@ -12,7 +12,7 @@ class Element {
     let element = document.createElement(type)
 
     if (text) {
-      element.textContent = text
+      element.innerText = text
     }
 
     if (classList) {

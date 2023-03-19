@@ -1,0 +1,91 @@
+<div class="fixed">
+  <div class="sidebar">
+    <nav class="side-item" onclick="getSentences('easy')">
+      <i data-feather="hexagon" class="item-icon"></i>
+      <span id="choice-easy" class="item-text">Facile</span>
+    </nav>
+
+    <nav class="side-item">
+      <i data-feather="box" class="item-icon"></i>
+      <span
+        id="choice-medium"
+        class="item-text"
+        onclick="getSentences('medium')"
+        >Moyen</span
+      >
+    </nav>
+
+    <nav class="side-item">
+      <i data-feather="codepen" class="item-icon"></i>
+      <span id="choice-hard" class="item-text" onclick="getSentences('hard')"
+        >Difficile</span
+      >
+    </nav>
+
+    <nav class="side-item">
+      <i data-feather="loader" class="item-icon"></i>
+      <span
+        id="reload-button"
+        class="item-text"
+        onclick="window.location.reload()"
+        >Reload</span
+      >
+    </nav>
+  </div>
+
+  <div class="container">
+    <div id="center" class="centerside">
+      <div id="conversation" class="conversation has-text-center">
+        <!-- machine msg and user msg will be injected here -->
+      </div>
+
+      <div class="taskbar has-text-center">
+        <nav class="task-item">
+          <i data-feather="bar-chart-2" class="item-icon"></i>
+          <span
+            id="show-statistics"
+            class="task__item-text"
+            onclick="gotoStats()"
+            >Statistics</span
+          >
+        </nav>
+
+        <!-- <nav class="task-item"> -->
+        <!-- <i data-feather="list" class="item-icon"></i> -->
+        <!-- <span -->
+        <!-- class="task__item-text" -->
+        <!-- onclick="console.log('height =>', window.innerHeight, 'width =>', window.innerWidth)" -->
+        <!-- >Liste Des Défis</span -->
+        <!-- > -->
+        <!-- </nav> -->
+
+        <nav class="task-item">
+          <i data-feather="globe" class="item-icon"></i>
+          <span
+            id="lang"
+            class="task__item-text"
+            onclick="setLangMap[store.get('language').type]()"
+            >Ma Langue
+          </span>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <div class="score-screen has-text-center">
+    <div class="success-score">
+      <p id="success" class="underline">Success</p>
+      <p id="success-points">0</p>
+    </div>
+
+    <div class="failed-score">
+      <p id="failures" class="underline">Failures</p>
+      <p id="failed-points">0</p>
+    </div>
+
+    <div class="total-phrase">
+      <p id="remaining-words" class="underline">Reste</p>
+      <p id="total-points"></p>
+    </div>
+  </div>
+</div>

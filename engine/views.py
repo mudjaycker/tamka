@@ -1,6 +1,5 @@
 from pony import orm
 from . db_models import Tamka
-from datetime import date
 
 
 class TamkaView:

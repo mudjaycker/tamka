@@ -27,9 +27,8 @@
     <script src="./serviceWorker.js"></script>
 
     <script>
-      {% include "./utils/scripts.js" %}
       {% include "./utils/makeChart.js" %}
+      {% include "./utils/scripts.js" %}
     </script>
-    <script src="./setServiceWorker.js"></script>
   </body>
 </html>

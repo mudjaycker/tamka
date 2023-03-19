@@ -5,7 +5,7 @@ const home = document.getElementById("home");
 const stats = document.getElementById("stats");
 
 function gotoStats() {
-  setInCache();
+  getCharts();
   home.classList.add(["invisible"]);
   stats.classList.remove(["invisible"]);
 }
@@ -85,18 +85,3 @@ function getLanguage() {
 eel.expose(setSuccessPoints);
 eel.expose(setFailedPoints);
 eel.expose(getLanguage);
-
-/*for stats.html*/
-//Auto setting value in local storage
-setTimeout(async () => {
-  let storage = new InStore();
-  let language = storage.get("language").type;
-
-  let total_qty = await eel.get_tamka_qty(language)();
-  let easy_qty = await eel.get_from_tamka(language, "easy", true, false)();
-  let medium_qty = await eel.get_from_tamka(language, "medium", true, false)();
-  let hard_qty = await eel.get_from_tamka(language, "hard", true, false)();
-
-  let language_type = language + "_language";
-  storage.set(language_type, { easy_qty, total_qty, medium_qty, hard_qty });
-}, 500);

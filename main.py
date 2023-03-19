@@ -1,5 +1,6 @@
 from desktop_ui.init_eel import *
-import webview
+from jinja2 import Environment, FileSystemLoader
+# import webview
 import threading
 from engine.speech2text import TamkaListener
 from engine.text2speech import TamkaSpeaker
@@ -7,7 +8,7 @@ from engine.word_bank_fr import french_datas, english_datas
 from engine.views import TamkaView
 from pony.orm import db_session
 from datetime import date
-from typing import Any
+from pathlib import Path
 
 
 tamka_view = TamkaView()
@@ -42,7 +43,6 @@ def get_from_tamka(language, level: str, success: bool = True, of_today: bool = 
                                                           and t.level == level
                                                           ))
         return query.count()
-
 
 
 def do_say(language, level, text):
@@ -98,7 +98,8 @@ def start_speaker(language, level):
                   else f"You have finished the {level} level"
                   )
 
-        do_say_thread = threading.Thread(target=do_say, args=(language, level, to_say))
+        do_say_thread = threading.Thread(
+            target=do_say, args=(language, level, to_say))
         do_say_thread.start()
 
 
@@ -106,14 +107,16 @@ expose_start_speaker = threading.Thread(target=eel.expose(start_speaker))
 expose_start_speaker.start()
 
 
-# def start_eel():
-    # eel.start("index.html", mode=None)
+
+root = Path(__file__).parent
+templates_dir = Path(root, 'desktop_ui')
+env = Environment( loader = FileSystemLoader(templates_dir) )
+template = env.get_template('base.tpl')
+
+# Save the compiled html to a file
+filename = Path(root, 'desktop_ui', 'index.html')
+with open(filename, 'w') as fh:
+    fh.write(template.render())
 
 
-# eel_thread = threading.Thread(target=start_eel)
-# eel_thread.start()
-
-eel.start("index.html", mode="chrome")
-
-# webview.create_window('Tamka', 'http://localhost:8000/index.html')
-# webview.start(debug=True)
+eel.start("index.html", mode="chrome", jinja_templates='/')

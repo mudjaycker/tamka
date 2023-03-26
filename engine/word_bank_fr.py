@@ -41,3 +41,4 @@ datas = {
         ]
     }
 }
+datas_copy = deepcopy(datas)

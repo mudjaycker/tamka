@@ -4,22 +4,50 @@ from jinja2 import Environment, FileSystemLoader
 import threading
 from engine.speech2text import TamkaListener
 from engine.text2speech import TamkaSpeaker
-from engine.word_bank_fr import french_datas, english_datas
+from engine.word_bank_fr import datas, datas_copy
 from engine.views import TamkaView
 from pony.orm import db_session
 from datetime import date
 from pathlib import Path
-
+from random import shuffle
 
 tamka_view = TamkaView()
+CHALLENGE_POS = {
+    "français": {
+        "easy": 0,
+        "medium": 0,
+        "hard": 0,
+    },
+    "english": {
+        "easy": 0,
+        "medium": 0,
+        "hard": 0,
+    },
+    
+}
+
+
+def say_finished(language, level):
+    french_level_map = {
+        "easy": "facile",
+        "medium": "moyen",
+        "hard": "difficile",
+    }
+
+    to_say = ("vous avez finis le niveau " +
+              french_level_map[level]
+              if language == "français"
+              else f"You have finished the {level} level"
+              )
+
+    do_say_thread = threading.Thread(
+        target=do_say, args=(language, level, to_say))
+    do_say_thread.start()
 
 
 @eel.expose
 def get_datas_length(language, level):
-    if language == "français":
-        return len(french_datas[level])
-    else:
-        return len(english_datas[level])
+    return len(datas[language][level])
 
 
 @eel.expose
@@ -46,27 +74,31 @@ def get_from_tamka(language, level: str, success: bool = True, of_today: bool = 
 
 
 def do_say(language, level, text):
-    receive_msg = threading.Thread(
+    receiveid_msg = threading.Thread(
         target=eel.systemSayToUser, args=(level, text))
 
     speaker = TamkaSpeaker(language)
     speak = threading.Thread(target=speaker.say, args=(text,))
-    receive_msg.start()
+    receiveid_msg.start()
     speak.start()
-    receive_msg.join()
+    receiveid_msg.join()
     speak.join()
 
 
 def start_speaker(language, level):
-    try:
-        text = (french_datas[level].pop()
-                if language == 'français'
-                else english_datas[level].pop()
-                )
+    global CHALLENGE_POS
+    challenges = datas[language][level]
+    len_challenges = len(challenges)
+    CHALLENGE_POS[language][level] += 1
 
+    if CHALLENGE_POS[language][level] > len_challenges:
+        say_finished(language, level)
+
+    else:
+        shuffle(datas_copy[language][level])
+        text = datas_copy[language][level].pop()
         to_say = "dites: "+text if language == 'français' else "say: "+text
         do_say(language, level, to_say)
-
         listener = TamkaListener(language)
         sayed = listener.run_recognition(eel.sayToSystem)
         query_params = {
@@ -84,34 +116,15 @@ def start_speaker(language, level):
             tamka_view.set(**query_params)
             eel.setFailedPoints()
 
-    except IndexError:
-
-        french_level_map = {
-            "easy": "facile",
-            "medium": "moyen",
-            "hard": "difficile",
-        }
-
-        to_say = ("vous avez finis le niveau " +
-                  french_level_map[level]
-                  if language == "français"
-                  else f"You have finished the {level} level"
-                  )
-
-        do_say_thread = threading.Thread(
-            target=do_say, args=(language, level, to_say))
-        do_say_thread.start()
-
 
 expose_start_speaker = threading.Thread(target=eel.expose(start_speaker))
 expose_start_speaker.start()
 
 
-
 root = Path(__file__).parent
 templates_dir = Path(root, 'desktop_ui')
-env = Environment( loader = FileSystemLoader(templates_dir) )
-template = env.get_template('base.tpl')
+env = Environment(loader=FileSystemLoader(templates_dir))
+template = env.get_template('base.jinja')
 
 # Save the compiled html to a file
 filename = Path(root, 'desktop_ui', 'index.html')

@@ -6,12 +6,15 @@ from engine.stt_tts.text2speech import TamkaSpeaker
 from engine.stt_tts.speech2text import TamkaListener
 from engine.models.word_bank_fr import datas, datas_copy
 from engine.models.views import TamkaView
+from engine.models.views import UserView
 from pony.orm import db_session
 from datetime import date
 from pathlib import Path
 from random import shuffle
 
 tamka_view = TamkaView()
+user_view = UserView()
+
 CHALLENGE_POS = {
     "français": {
         "easy": 0,

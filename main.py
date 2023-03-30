@@ -1,11 +1,11 @@
 from desktop_ui.init_eel import *
 from jinja2 import Environment, FileSystemLoader
-# import webview
+from copy import deepcopy
 import threading
-from engine.speech2text import TamkaListener
-from engine.text2speech import TamkaSpeaker
-from engine.word_bank_fr import datas, datas_copy
-from engine.views import TamkaView
+from engine.stt_tts.text2speech import TamkaSpeaker
+from engine.stt_tts.speech2text import TamkaListener
+from engine.models.word_bank_fr import datas, datas_copy
+from engine.models.views import TamkaView
 from pony.orm import db_session
 from datetime import date
 from pathlib import Path
@@ -25,6 +25,13 @@ CHALLENGE_POS = {
     },
     
 }
+@eel.expose
+def restart(language, level):
+    global datas_copy, CHALLENGE_POS
+    CHALLENGE_POS[language][level] = 0
+    datas_copy = deepcopy(datas)
+    print("===>", CHALLENGE_POS[language][level])
+    print("===>", datas_copy)
 
 
 def say_finished(language, level):
@@ -47,7 +54,7 @@ def say_finished(language, level):
 
 @eel.expose
 def get_datas_length(language, level):
-    return len(datas[language][level])
+    return len(datas_copy[language][level])
 
 
 @eel.expose
@@ -86,7 +93,7 @@ def do_say(language, level, text):
 
 
 def start_speaker(language, level):
-    global CHALLENGE_POS
+    global datas_copy, CHALLENGE_POS
     challenges = datas[language][level]
     len_challenges = len(challenges)
     CHALLENGE_POS[language][level] += 1

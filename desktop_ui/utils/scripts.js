@@ -1,8 +1,28 @@
-feather.replace();
 const store = new InStore();
+function getLanguage() {
+  return store.get("language").type;
+}
+feather.replace();
+
+// document.addEventListener('keydown', (e) => {
+// e.preventDefault()
+// if (e.key.toLowerCase() === 'c' && e.ctrlKey && e.shiftKey) {
+// alert('cannot show dev mode');
+// }
+// });
+addEventListener("contextmenu", (event) => {
+  event.preventDefault();
+});
 //store.set("language", {type: "english"})
 const home = document.getElementById("home");
 const stats = document.getElementById("stats");
+
+currentLevel = null
+//restart level function
+async function restart() {
+  await eel.restart(getLanguage(), currentLevel)()
+  console.log(currentLevel)
+}
 
 function gotoStats() {
   getCharts();
@@ -14,11 +34,19 @@ function gotoHome() {
   stats.classList.add(["invisible"]);
   home.classList.remove(["invisible"]);
 }
+// total points state
 
-async function getSentences(level) {
-  eel.start_speaker(getLanguage(), level);
+function getSentences(level) {
+  let lang = getLanguage();
   let totalPoint = document.getElementById("total-points");
-  totalPoint.innerText = await eel.get_datas_length(getLanguage(), level)();
+  eel.get_datas_length(
+    getLanguage(),
+    level
+  )((len) => {
+    totalPoint.innerText = len;
+  });
+  currentLevel = level;
+  eel.start_speaker(lang, level);
 }
 
 function setSuccessPoints() {
@@ -79,9 +107,6 @@ let setLangMap = {
   },
 };
 
-function getLanguage() {
-  return store.get("language").type;
-}
 eel.expose(setSuccessPoints);
 eel.expose(setFailedPoints);
 eel.expose(getLanguage);

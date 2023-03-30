@@ -1,16 +1,12 @@
 import pyttsx3
 import platform
 from pathlib import Path
-from tumiaji import require
 from . ubuntu_speaker import speaker
-
-eel_path = str(Path(__file__).parent.parent)+"/desktop_ui/init_eel.py"
-eel = require(eel_path).eel
 
 
 class TamkaSpeaker:
     def __init__(self, language="français"):
-        self.rate=130,
+        self.rate = 130,
         self.language = language
         self.win_lang = language
         self.engine = pyttsx3.init()

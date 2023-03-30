@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="background.css" />
-    <link rel="stylesheet" href="./assets/style/style.css" />
-    <script type="text/javascript" src="/eel.js"></script>
-    <script src="./third_parts/chart.js"></script>
-    <script src="./utils/storage.js"></script>
-    <script src="./utils/element.js"></script>
 
-    <title>Tamka</title>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="background.css" />
+  <link rel="stylesheet" href="./assets/style/style.css" />
+  <script type="text/javascript" src="/eel.js"></script>
+  <script src="./third_parts/chart.js"></script>
+  <script src="./utils/storage.js"></script>
+  <script src="./utils/element.js"></script>
 
-  <body>
-    <div id="home"><div class="fixed">
+  <title>Tamka</title>
+</head>
+
+<body>
+  <div id="home"><div class="fixed">
   <div class="sidebar">
     <nav class="side-item" onclick="getSentences('easy')">
       <i data-feather="hexagon" class="item-icon"></i>
@@ -44,7 +45,7 @@
       <span
         id="reload-button"
         class="item-text"
-        onclick="window.location.reload()"
+        onclick="restart()"
         >Reload</span
       >
     </nav>
@@ -106,21 +107,18 @@
     </div>
   </div>
 </div></div>
-    <div id="stats" class="stats invisible">
-          <a onclick="gotoHome()">&#x2190;</a>
+  <div id="stats" class="invisible">    <a onclick="gotoHome()">&#x2190;</a>
     <div class="container_canvas">
       <canvas id="myChart"></canvas>
-    </div>
-    </div>
+    </div></div>
 
-    <script src="./utils/say-to-system.js"></script>
-    <script src="./utils/say-to-user.js"></script>
-    <script src="src/index.js"></script>
-    <script src="./third_parts/feather_icons.min.js"></script>
-    <script src="./serviceWorker.js"></script>
+  <script src="./utils/say-to-system.js"></script>
+  <script src="./utils/say-to-user.js"></script>
+  <script src="src/index.js"></script>
+  <script src="./third_parts/feather_icons.min.js"></script>
 
-    <script>
-      function getCharts() {
+  <script>
+    function getCharts() {
   setTimeout(async () => {
     let storage = new InStore();
     let language = storage.get("language").type;
@@ -217,11 +215,31 @@
     });
   }, 1000);
 }
-      feather.replace();
-const store = new InStore();
+    const store = new InStore();
+function getLanguage() {
+  return store.get("language").type;
+}
+feather.replace();
+
+// document.addEventListener('keydown', (e) => {
+// e.preventDefault()
+// if (e.key.toLowerCase() === 'c' && e.ctrlKey && e.shiftKey) {
+// alert('cannot show dev mode');
+// }
+// });
+addEventListener("contextmenu", (event) => {
+  event.preventDefault();
+});
 //store.set("language", {type: "english"})
 const home = document.getElementById("home");
 const stats = document.getElementById("stats");
+
+currentLevel = null
+//restart level function
+async function restart() {
+  await eel.restart(getLanguage(), currentLevel)()
+  console.log(currentLevel)
+}
 
 function gotoStats() {
   getCharts();
@@ -233,11 +251,19 @@ function gotoHome() {
   stats.classList.add(["invisible"]);
   home.classList.remove(["invisible"]);
 }
+// total points state
 
-async function getSentences(level) {
-  eel.start_speaker(getLanguage(), level);
+function getSentences(level) {
+  let lang = getLanguage();
   let totalPoint = document.getElementById("total-points");
-  totalPoint.innerText = await eel.get_datas_length(getLanguage(), level)();
+  eel.get_datas_length(
+    getLanguage(),
+    level
+  )((len) => {
+    totalPoint.innerText = len;
+  });
+  currentLevel = level;
+  eel.start_speaker(lang, level);
 }
 
 function setSuccessPoints() {
@@ -298,12 +324,10 @@ let setLangMap = {
   },
 };
 
-function getLanguage() {
-  return store.get("language").type;
-}
 eel.expose(setSuccessPoints);
 eel.expose(setFailedPoints);
 eel.expose(getLanguage);
-    </script>
-  </body>
+  </script>
+</body>
+
 </html>

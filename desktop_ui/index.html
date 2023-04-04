@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="background.css" />
   <link rel="stylesheet" href="./assets/style/style.css" />
+  <link rel="stylesheet" href="./assets/style/form.css" />
   <script type="text/javascript" src="/eel.js"></script>
   <script src="./third_parts/chart.js"></script>
   <script src="./utils/storage.js"></script>
@@ -16,7 +17,33 @@
 </head>
 
 <body>
-  <div id="home"><div class="fixed">
+  <div id="auth"><div class="group">
+  <div class="form__group">
+    <input class="form__field" type="text" />
+    <label class="form__label" for="">Username</label>
+  </div>
+  <div class="form__group">
+    <input type="password" class="form__field" type="text" />
+    <label class="form__label" for="">Password</label>
+  </div>
+
+  <button
+    style="
+      background-color: #25497e;
+      color: white;
+      width: 30%;
+      height: 10%;
+      text-align: center;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: large;
+    "
+    onclick="login()"
+  >
+    Login
+  </button>
+</div></div>
+  <div id="home" class="invisible"><div class="fixed">
   <div class="sidebar">
     <nav class="side-item" onclick="getSentences('easy')">
       <i data-feather="hexagon" class="item-icon"></i>
@@ -215,11 +242,20 @@
     });
   }, 1000);
 }
-    const store = new InStore();
+    feather.replace();
+const store = new InStore();
 function getLanguage() {
   return store.get("language").type;
 }
-feather.replace();
+
+function page(option, id) {
+  const page = document.getElementById(id);
+  if (option === "show") {
+    page.classList.remove(["invisible"]);
+  } else {
+    page.classList.add(["invisible"]);
+  }
+}
 
 // document.addEventListener('keydown', (e) => {
 // e.preventDefault()
@@ -233,23 +269,35 @@ addEventListener("contextmenu", (event) => {
 //store.set("language", {type: "english"})
 const home = document.getElementById("home");
 const stats = document.getElementById("stats");
+const auth = document.getElementById("auth");
 
-currentLevel = null
+currentLevel = null;
 //restart level function
 async function restart() {
-  await eel.restart(getLanguage(), currentLevel)()
-  console.log(currentLevel)
+  await eel.restart(getLanguage(), currentLevel)();
+  console.log(currentLevel);
 }
 
 function gotoStats() {
   getCharts();
-  home.classList.add(["invisible"]);
-  stats.classList.remove(["invisible"]);
+  page("hide", "home");
+  page("show", "stats");
+  // home.classList.add(["invisible"]);
+  // stats.classList.remove(["invisible"]);
+}
+
+function login() {
+  // auth.classList.add(["invisible"]);
+  // home.classList.remove(["invisible"]);
+  page("hide", "auth");
+  page("show", "home");
 }
 
 function gotoHome() {
-  stats.classList.add(["invisible"]);
-  home.classList.remove(["invisible"]);
+  // stats.classList.add(["invisible"]);
+  // home.classList.remove(["invisible"]);
+  page("hide", "stats");
+  page("show", "home");
 }
 // total points state
 

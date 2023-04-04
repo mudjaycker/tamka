@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="background.css" />
   <link rel="stylesheet" href="./assets/style/style.css" />
+  <link rel="stylesheet" href="./assets/style/form.css" />
   <script type="text/javascript" src="/eel.js"></script>
   <script src="./third_parts/chart.js"></script>
   <script src="./utils/storage.js"></script>
@@ -16,7 +17,8 @@
 </head>
 
 <body>
-  <div id="home">{% include "./components/conversations.html" %}</div>
+  <div id="auth">{% include "./components/auth.html" %}</div>
+  <div id="home" class="invisible">{% include "./components/conversations.html" %}</div>
   <div id="stats" class="invisible">{% include "./components/statiscs.html" %}</div>
 
   <script src="./utils/say-to-system.js"></script>
@@ -26,7 +28,8 @@
 
   <script>
     {% include "./utils/makeChart.js" %}
-    {% include "./utils/scripts.js" %}
+    {% include "./utils/scripts/index.js" %}
+    {% include "./utils/scripts/language.js" %}
   </script>
 </body>
 

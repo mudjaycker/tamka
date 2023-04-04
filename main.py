@@ -28,6 +28,7 @@ CHALLENGE_POS = {
     },
     
 }
+
 @eel.expose
 def restart(language, level):
     global datas_copy, CHALLENGE_POS

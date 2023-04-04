@@ -1,6 +1,4 @@
 let currentLevel = null;
-
-// total points state
 function getSentences(level) {
   let lang = getLanguage();
   let totalPoint = document.getElementById("total-points");
@@ -41,26 +39,14 @@ function français() {
   translate("show-statistics", "Voir les statistiques");
   translate("lang", "Langue anglaise");
   translate("success", "Réussites");
-  translate("failures", "Failures");
+  translate("failures", "Echecs");
   translate("remaining-words", "Mots Restants");
   translate("reload-button", "Recommencer");
 }
 
-let langMap = { english, français };
-langMap[store.get("language").type]();
-
-let setLangMap = {
-  english: () => {
-    store.set("language", { type: "français" });
-    langMap[store.get("language").type]();
-    console.log("french language is set");
-  },
-  français: () => {
-    store.set("language", { type: "english" });
-    langMap[store.get("language").type]();
-    console.log("english language is set");
-  },
-};
+async function restart() {
+  await eel.restart(getLanguage(), currentLevel)();
+}
 
 eel.expose(setSuccessPoints);
 eel.expose(setFailedPoints);

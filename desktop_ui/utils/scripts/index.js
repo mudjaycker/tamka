@@ -1,4 +1,21 @@
 feather.replace();
+let store = new InStore();
+
+let langMap = { english, français };
+langMap[store.get("language").type]();
+
+let setLangMap = {
+  english: () => {
+    store.set("language", { type: "français" });
+    langMap[store.get("language").type]();
+    console.log("french language is set");
+  },
+  français: () => {
+    store.set("language", { type: "english" });
+    langMap[store.get("language").type]();
+    console.log("english language is set");
+  },
+};
 
 function page(option, id) {
   const page = document.getElementById(id);
@@ -19,11 +36,13 @@ addEventListener("contextmenu", (event) => {
   event.preventDefault();
 });
 
+function translate(target, text) {
+  let targetTo = document.getElementById(target);
+  targetTo.innerText = text;
+}
 
-function gotoStats() {
-  getCharts();
-  page("hide", "home");
-  page("show", "stats");
+function getLanguage() {
+  return store.get("language").type;
 }
 
 function login() {
@@ -36,18 +55,9 @@ function gotoHome() {
   page("show", "home");
 }
 
-
-function translate(target, text) {
-  let targetTo = document.getElementById(target)
-  targetTo.innerText = text
-  
+function gotoStats() {
+  getCharts();
+  page("hide", "home");
+  page("show", "stats");
 }
 
-
-function getLanguage() {
-  return store.get("language").type;
-}
-//restart level function
-async function restart() {
-  await eel.restart(getLanguage(), currentLevel)();
-}

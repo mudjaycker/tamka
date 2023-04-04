@@ -10,8 +10,11 @@
   <link rel="stylesheet" href="./assets/style/form.css" />
   <script type="text/javascript" src="/eel.js"></script>
   <script src="./third_parts/chart.js"></script>
-  <script src="./utils/storage.js"></script>
   <script src="./utils/element.js"></script>
+  <script src="./utils/makeChart.js"></script>
+  <script src="./utils/storage.js"></script>
+
+  
 
   <title>Tamka</title>
 </head>
@@ -141,10 +144,125 @@
 
   <script src="./utils/say-to-system.js"></script>
   <script src="./utils/say-to-user.js"></script>
-  <script src="src/index.js"></script>
   <script src="./third_parts/feather_icons.min.js"></script>
 
   <script>
+    feather.replace();
+let store = new InStore();
+
+let langMap = { english, français };
+langMap[store.get("language").type]();
+
+let setLangMap = {
+  english: () => {
+    store.set("language", { type: "français" });
+    langMap[store.get("language").type]();
+    console.log("french language is set");
+  },
+  français: () => {
+    store.set("language", { type: "english" });
+    langMap[store.get("language").type]();
+    console.log("english language is set");
+  },
+};
+
+function page(option, id) {
+  const page = document.getElementById(id);
+  if (option === "show") {
+    page.classList.remove(["invisible"]);
+  } else {
+    page.classList.add(["invisible"]);
+  }
+}
+
+// document.addEventListener('keydown', (e) => {
+// e.preventDefault()
+// if (e.key.toLowerCase() === 'c' && e.ctrlKey && e.shiftKey) {
+// alert('cannot show dev mode');
+// }
+// });
+addEventListener("contextmenu", (event) => {
+  event.preventDefault();
+});
+
+function translate(target, text) {
+  let targetTo = document.getElementById(target);
+  targetTo.innerText = text;
+}
+
+function getLanguage() {
+  return store.get("language").type;
+}
+
+function login() {
+  page("hide", "auth");
+  page("show", "home");
+}
+
+function gotoHome() {
+  page("hide", "stats");
+  page("show", "home");
+}
+
+function gotoStats() {
+  getCharts();
+  page("hide", "home");
+  page("show", "stats");
+}
+
+    let currentLevel = null;
+function getSentences(level) {
+  let lang = getLanguage();
+  let totalPoint = document.getElementById("total-points");
+  eel.get_datas_length(
+    getLanguage(),
+    level
+  )((len) => {
+    totalPoint.innerText = len;
+  });
+  currentLevel = level;
+  eel.start_speaker(lang, level);
+}
+
+function setSuccessPoints() {
+  let successPoints = document.getElementById("success-points");
+  successPoints.innerText = Number(successPoints.textContent) + 1;
+}
+function setFailedPoints() {
+  let failedPoints = document.getElementById("failed-points");
+  failedPoints.innerText = Number(failedPoints.textContent) + 1;
+}
+
+function english() {
+  translate("choice-easy", "Easy");
+  translate("choice-medium", "Medium");
+  translate("choice-hard", "Hard");
+  translate("show-statistics", "Show Statistics");
+  translate("lang", "French language");
+  translate("success", "Success");
+  translate("failures", "Failures");
+  translate("remaining-words", "Remaining Words");
+  translate("reload-button", "Restart");
+}
+function français() {
+  translate("choice-easy", "Facile");
+  translate("choice-medium", "Moyen");
+  translate("choice-hard", "Difficile");
+  translate("show-statistics", "Voir les statistiques");
+  translate("lang", "Langue anglaise");
+  translate("success", "Réussites");
+  translate("failures", "Echecs");
+  translate("remaining-words", "Mots Restants");
+  translate("reload-button", "Recommencer");
+}
+
+async function restart() {
+  await eel.restart(getLanguage(), currentLevel)();
+}
+
+eel.expose(setSuccessPoints);
+eel.expose(setFailedPoints);
+eel.expose(getLanguage);
     function getCharts() {
   setTimeout(async () => {
     let storage = new InStore();
@@ -242,139 +360,6 @@
     });
   }, 1000);
 }
-    feather.replace();
-const store = new InStore();
-function getLanguage() {
-  return store.get("language").type;
-}
-
-function page(option, id) {
-  const page = document.getElementById(id);
-  if (option === "show") {
-    page.classList.remove(["invisible"]);
-  } else {
-    page.classList.add(["invisible"]);
-  }
-}
-
-// document.addEventListener('keydown', (e) => {
-// e.preventDefault()
-// if (e.key.toLowerCase() === 'c' && e.ctrlKey && e.shiftKey) {
-// alert('cannot show dev mode');
-// }
-// });
-addEventListener("contextmenu", (event) => {
-  event.preventDefault();
-});
-//store.set("language", {type: "english"})
-const home = document.getElementById("home");
-const stats = document.getElementById("stats");
-const auth = document.getElementById("auth");
-
-currentLevel = null;
-//restart level function
-async function restart() {
-  await eel.restart(getLanguage(), currentLevel)();
-  console.log(currentLevel);
-}
-
-function gotoStats() {
-  getCharts();
-  page("hide", "home");
-  page("show", "stats");
-  // home.classList.add(["invisible"]);
-  // stats.classList.remove(["invisible"]);
-}
-
-function login() {
-  // auth.classList.add(["invisible"]);
-  // home.classList.remove(["invisible"]);
-  page("hide", "auth");
-  page("show", "home");
-}
-
-function gotoHome() {
-  // stats.classList.add(["invisible"]);
-  // home.classList.remove(["invisible"]);
-  page("hide", "stats");
-  page("show", "home");
-}
-// total points state
-
-function getSentences(level) {
-  let lang = getLanguage();
-  let totalPoint = document.getElementById("total-points");
-  eel.get_datas_length(
-    getLanguage(),
-    level
-  )((len) => {
-    totalPoint.innerText = len;
-  });
-  currentLevel = level;
-  eel.start_speaker(lang, level);
-}
-
-function setSuccessPoints() {
-  let successPoints = document.getElementById("success-points");
-  successPoints.innerText = Number(successPoints.textContent) + 1;
-}
-function setFailedPoints() {
-  let failedPoints = document.getElementById("failed-points");
-  failedPoints.innerText = Number(failedPoints.textContent) + 1;
-}
-
-let choiceEasy = document.getElementById("choice-easy");
-let choiceMedium = document.getElementById("choice-medium");
-let choiceHard = document.getElementById("choice-hard");
-let showStatistics = document.getElementById("show-statistics");
-let lang = document.getElementById("lang");
-let success = document.getElementById("success");
-let failures = document.getElementById("failures");
-let remainingWords = document.getElementById("remaining-words");
-let reloadButton = document.getElementById("reload-button");
-
-function english() {
-  choiceEasy.innerText = "Easy";
-  choiceMedium.innerText = "Medium";
-  choiceHard.innerText = "Hard";
-  showStatistics.innerText = "Show Statistics";
-  lang.innerText = "French language";
-  success.innerText = "Success";
-  failures.innerText = "Failures";
-  remainingWords.innerText = "Remaing Words";
-  reloadButton.innerText = "Restart";
-}
-function français() {
-  choiceEasy.innerText = "Facile";
-  choiceMedium.innerText = "Moyen";
-  choiceHard.innerText = "Difficile";
-  showStatistics.innerText = "Voir les statistiques";
-  lang.innerText = "Langue anglaise";
-  success.innerText = "Réussites";
-  failures.innerText = "Échecs";
-  remainingWords.innerText = "Mots Restants";
-  reloadButton.innerText = "Recommencer";
-}
-
-let langMap = { english, français };
-langMap[store.get("language").type]();
-
-let setLangMap = {
-  english: () => {
-    store.set("language", { type: "français" });
-    langMap[store.get("language").type]();
-    console.log("french language is set");
-  },
-  français: () => {
-    store.set("language", { type: "english" });
-    langMap[store.get("language").type]();
-    console.log("english language is set");
-  },
-};
-
-eel.expose(setSuccessPoints);
-eel.expose(setFailedPoints);
-eel.expose(getLanguage);
   </script>
 </body>
 

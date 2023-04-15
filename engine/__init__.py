@@ -9,9 +9,17 @@ from datetime import date
 
 from .stt_tts.speech2text import TamkaListener
 from .stt_tts.text2speech import TamkaSpeaker
-from .models.word_bank_fr import *
+from . models.word_bank_fr import datas, datas_copy
 from .models.views import TamkaView, UserView
+from typing import TypedDict
 
+QueryParams = TypedDict("QueryParams", {
+    "user": str,
+    "text": str,
+    "success": bool,
+    "level": str,
+    "language": str
+})
 
 UI_DIR = Path(__file__).parent.parent
 eel.init(Path(UI_DIR, "desktop_ui"))
@@ -35,7 +43,7 @@ CHALLENGE_POS = {
 
 
 @eel.expose
-def restart(language, level):
+def restart(language: str, level: str) -> None:
     global datas_copy, CHALLENGE_POS
     CHALLENGE_POS[language][level] = 0
     datas_copy = deepcopy(datas)
@@ -43,7 +51,7 @@ def restart(language, level):
     # print("===>", datas_copy)
 
 
-def say_finished(language, level):
+def say_finished(language: str, level: str) -> None:
     french_level_map = {
         "easy": "facile",
         "medium": "moyen",
@@ -62,34 +70,37 @@ def say_finished(language, level):
 
 
 @eel.expose
-def get_datas_length(language, level):
+def get_datas_length(language: str, level: str) -> int:
     return len(datas_copy[language][level])
 
 
 @eel.expose
-def get_tamka_qty(language):
+def get_tamka_qty(language: str) -> int:
     with db_session():
         tamka_qty = tamka_view.get_where(
-            lambda t: t.language == language).count()
+            lambda t: t.language == language).count()  # type: ignore
         return tamka_qty
 
 
 @eel.expose
-def get_from_tamka(language: str, level: str, success: bool = True, of_today: bool = True):
+def get_from_tamka(language: str, level: str, success: bool = True,
+                   of_today: bool = True) -> int:
     with db_session():
         query = (tamka_view.get_where(lambda t: t.language == language
                                       and t.success == success
                                       and t.level == level
                                       and t.date_of == date.today()
                                       )
-                 ) if of_today else (tamka_view.get_where(lambda t: t.language == language
-                                                          and t.success == success
-                                                          and t.level == level
-                                                          ))
-        return query.count()
+                 ) if of_today else (tamka_view.
+                                     get_where
+                                     (lambda t: t.language == language
+                                      and t.success == success
+                                      and t.level == level
+                                      ))
+        return query.count()  # type: ignore
 
 
-def do_say(language, level, text):
+def do_say(language: str, level: str, text: str) -> None:
     receiveid_msg = threading.Thread(
         target=eel.systemSayToUser, args=(level, text))
 
@@ -101,7 +112,7 @@ def do_say(language, level, text):
     speak.join()
 
 
-def start_speaker(language, level):
+def start_speaker(language: str, level: str) -> None:
     global datas_copy, CHALLENGE_POS
     challenges = datas[language][level]
     len_challenges = len(challenges)
@@ -117,19 +128,19 @@ def start_speaker(language, level):
         do_say(language, level, to_say)
         listener = TamkaListener(language)
         sayed = listener.run_recognition(eel.sayToSystem)
-        query_params = {
+        q_params: QueryParams = {
+            "user": "testuser",
             "text": text,
             "success": False,
             "level": level,
             "language": language
         }
-
         if text.lower() == sayed:  # on sayed well
-            query_params["success"] = True
-            tamka_view.set(**query_params)
+            q_params["success"] = True
+            tamka_view.set(**q_params)
             eel.setSuccessPoints()
         else:  # on sayed bad
-            tamka_view.set(**query_params)
+            tamka_view.set(**q_params)
             eel.setFailedPoints()
 
 

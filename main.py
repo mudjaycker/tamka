@@ -2,7 +2,6 @@ from jinja2 import Environment, FileSystemLoader
 from engine import Path, eel
 
 
-
 root = Path(__file__).parent
 templates_dir = Path(root, 'desktop_ui')
 env = Environment(loader=FileSystemLoader(templates_dir))

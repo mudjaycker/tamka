@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-any-return"
 import eel
 from pathlib import Path
 
@@ -11,7 +12,7 @@ from .stt_tts.speech2text import TamkaListener
 from .stt_tts.text2speech import TamkaSpeaker
 from . models.word_bank_fr import datas, datas_copy
 from .models.views import TamkaView, UserView
-from typing import TypedDict
+from typing import TypedDict, Final
 
 QueryParams = TypedDict("QueryParams", {
     "user": str,
@@ -21,13 +22,13 @@ QueryParams = TypedDict("QueryParams", {
     "language": str
 })
 
-UI_DIR = Path(__file__).parent.parent
-eel.init(Path(UI_DIR, "desktop_ui"))
+UI_DIR: Final[Path] = Path(__file__).parent.parent
+eel.init(str(Path(UI_DIR, "desktop_ui")))
 
 tamka_view = TamkaView()
 user_view = UserView()
 
-CHALLENGE_POS = {
+challenge_pos = {
     "français": {
         "easy": 0,
         "medium": 0,
@@ -44,10 +45,10 @@ CHALLENGE_POS = {
 
 @eel.expose
 def restart(language: str, level: str) -> None:
-    global datas_copy, CHALLENGE_POS
-    CHALLENGE_POS[language][level] = 0
+    global datas_copy, challenge_pos
+    challenge_pos[language][level] = 0
     datas_copy = deepcopy(datas)
-    # print("===>", CHALLENGE_POS[language][level])
+    # print("===>", challenge_pos[language][level])
     # print("===>", datas_copy)
 
 
@@ -79,30 +80,33 @@ def get_tamka_qty(language: str) -> int:
     with db_session():
         tamka_qty = tamka_view.get_where(
             lambda t: t.language == language).count()  # type: ignore
-        return tamka_qty
+        return tamka_qty                       # conflict between count methods
 
 
 @eel.expose
 def get_from_tamka(language: str, level: str, success: bool = True,
                    of_today: bool = True) -> int:
     with db_session():
-        query = (tamka_view.get_where(lambda t: t.language == language
-                                      and t.success == success
-                                      and t.level == level
-                                      and t.date_of == date.today()
-                                      )
+        query = (tamka_view.
+                 get_where(
+                     lambda t: t.language == language
+                     and t.success == success
+                     and t.level == level
+                     and t.date_of == date.today()
+                 )
                  ) if of_today else (tamka_view.
-                                     get_where
-                                     (lambda t: t.language == language
-                                      and t.success == success
-                                      and t.level == level
-                                      ))
+                                     get_where(
+                                         lambda t: t.language == language
+                                         and t.success == success
+                                         and t.level == level
+                                     ))
         return query.count()  # type: ignore
+        # conflict between count methods
 
 
 def do_say(language: str, level: str, text: str) -> None:
     receiveid_msg = threading.Thread(
-        target=eel.systemSayToUser, args=(level, text))
+        target=eel.systemSayToUser, args=(level, text))  # type: ignore
 
     speaker = TamkaSpeaker(language)
     speak = threading.Thread(target=speaker.say, args=(text,))
@@ -113,12 +117,12 @@ def do_say(language: str, level: str, text: str) -> None:
 
 
 def start_speaker(language: str, level: str) -> None:
-    global datas_copy, CHALLENGE_POS
+    global datas_copy, challenge_pos
     challenges = datas[language][level]
     len_challenges = len(challenges)
-    CHALLENGE_POS[language][level] += 1
+    challenge_pos[language][level] += 1
 
-    if CHALLENGE_POS[language][level] > len_challenges:
+    if challenge_pos[language][level] > len_challenges:
         say_finished(language, level)
 
     else:
@@ -127,7 +131,7 @@ def start_speaker(language: str, level: str) -> None:
         to_say = "dites: "+text if language == 'français' else "say: "+text
         do_say(language, level, to_say)
         listener = TamkaListener(language)
-        sayed = listener.run_recognition(eel.sayToSystem)
+        sayed = listener.run_recognition(eel.sayToSystem)  # type: ignore
         q_params: QueryParams = {
             "user": "testuser",
             "text": text,
@@ -138,10 +142,10 @@ def start_speaker(language: str, level: str) -> None:
         if text.lower() == sayed:  # on sayed well
             q_params["success"] = True
             tamka_view.set(**q_params)
-            eel.setSuccessPoints()
+            eel.setSuccessPoints()  # type: ignore
         else:  # on sayed bad
             tamka_view.set(**q_params)
-            eel.setFailedPoints()
+            eel.setFailedPoints()  # type: ignore
 
 
 expose_start_speaker = threading.Thread(target=eel.expose(start_speaker))

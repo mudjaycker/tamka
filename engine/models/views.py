@@ -5,18 +5,24 @@ from typing import Callable, Sequence, Union, TypedDict
 from datetime import date
 import bcrypt
 from pony.orm.core import Query  # for typing
-from db_models import Tamka, User
+from db_models import Tamka, User, GameSession
 
 Users = Union[Query, Sequence[User]]
 Tamkas = Union[Query, Sequence[Tamka]]
+GameSessions = Union[Query, Sequence[GameSession]]
 UserTransact = TypedDict("UserTransact", {
     "message_or_entity": Users | str,
     "status": bool
 })
 
+GameSessionState = TypedDict("GameSessionState", {
+    "message_or_entity": GameSessions | str,
+    "status": bool
+})
+
 
 class TamkaView:
-    def set(self, user: str, text: str, level: str,
+    def set(self, user: int, text: str, level: str,
             language: str, date_of: date = date.today()) -> None:
         with orm.db_session():
             Tamka(user=user, text=text, language=language,
@@ -71,15 +77,39 @@ class UserView:
         if self.is_user(username, password):
             with orm.db_session():
                 user = self.get_user(username, password)
+
                 user["message_or_entity"].delete()
                 return True
         return False
 
 
-u = UserView()
-# print(u.delete("tom", "test123"))
-print("is user", u.is_user("tom", "test123"))
-print(u.create("tom", "test123"))
-# print(u.delete("tom", "test123"))
-print("is user", u.is_user("tom", "test123"))
-# print(u.is_user("tom", "test123"))
+class GameView:
+    def create(self, user_pk: int, tamka_pk: int, success: bool,
+               date_of: date = date.today()) -> GameSessionState:
+        try:
+            with orm.db_session():
+                GameSession(user=user_pk, tamka=tamka_pk, success=success,
+                            date_of=date_of)
+            return {"message_or_entity": "created", "status": True}
+        except Exception as e:
+            return {"message_or_entity": str(e), "status": False}
+
+    def get_all(self, user_pk: int) -> GameSessionState:
+        try:
+            with orm.db_session():
+                res: GameSessions
+                res = GameSession.select(lambda g: g.user == user_pk)
+                return {"message_or_entity": res, "status": True}
+        except Exception as e:
+            return {"message_or_entity": str(e), "status": False}
+
+
+# g = GameView()
+# print(g.create(user_pk=1, tamka_pk=1, success=True))
+
+
+# u = UserView()
+# user_args = {"username": "tom", "password": "test123"}
+# print(u.delete(**user_args))
+# print("is user", u.is_user(**user_args))
+# print(u.create(**user_args))

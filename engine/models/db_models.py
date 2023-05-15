@@ -10,10 +10,11 @@ db = orm.Database()
 class User(db.Entity):
     username: str = orm.Required(str, unique=True)
     password: bytes = orm.Required(bytes)
-    game: Sequence[int] = orm.Set("Game")
+    game: Sequence[int] = orm.Set("GameSession")
     tamka: Sequence[int] = orm.Set("Tamka")
-    statistic: Sequence[int] = orm.Set("Statistic")
+    statistic: Sequence[int] = orm.Set("Statistics")
     stats_by_sentence: int = orm.Set("StatsBySentence")
+    by_level: Sequence[int] = orm.Set("StatsByLevel")
 
 
 class Tamka(db.Entity):
@@ -22,27 +23,33 @@ class Tamka(db.Entity):
     language: str = orm.Required(str)
     level: str = orm.Required(str)
     date_of: date = orm.Required(date, default=date.today())
-    game: int = orm.Optional("Game")
+    game: int = orm.Optional("GameSession")
 
 
-class Game(db.Entity):
+class GameSession(db.Entity):
     user: int = orm.Required("User")
     tamka: int = orm.Required("Tamka")
-    succes: str = orm.Required(bool)
+    success: str = orm.Required(bool)
     date_of: date = orm.Required(date, default=date.today())
 
 
-class Statistic(db.Entity):
+class Statistics(db.Entity):
     user: int = orm.Required("User")
     language: str = orm.Required(str)
-    by_sentence: int = orm.Required("StatsBySentence")
-    by_senteces: Sequence[int] = orm.Set("StatsBySentence")
-    by_level: str = orm.Required(float)
+    by_sentence: int = orm.Optional("StatsBySentence")
+    by_level: int = orm.Optional("StatsByLevel")
 
 
 class StatsBySentence(db.Entity):
     user: int = orm.Required("User")
-    sentence: str = db.Column(db.String)
+    sentence: str = orm.Required(str)
+    statistics: int = orm.Required("Statistics")
+
+
+class StatsByLevel(db.Entity):
+    user: int = orm.Required("User")
+    level: str = orm.Required(str)
+    statistics: int = orm.Required("Statistics")
 
 
 db.bind(provider='sqlite', filename='database.sqlite', create_db=True)

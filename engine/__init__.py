@@ -11,22 +11,16 @@ from datetime import date
 from .stt_tts.speech2text import TamkaListener
 from .stt_tts.text2speech import TamkaSpeaker
 from . models.word_bank_fr import datas, datas_copy
-from .models.views import TamkaView, UserView
-from typing import TypedDict, Final
+from .models.views import TamkaView, UserView, GameView
+from typing import Final
 
-QueryParams = TypedDict("QueryParams", {
-    "user": str,
-    "text": str,
-    "success": bool,
-    "level": str,
-    "language": str
-})
 
 UI_DIR: Final[Path] = Path(__file__).parent.parent
 eel.init(str(Path(UI_DIR, "desktop_ui")))
 
-tamka_view = TamkaView()
 user_view = UserView()
+game_view = GameView()
+tamka_view = TamkaView()
 
 challenge_pos = {
     "français": {
@@ -89,7 +83,7 @@ def get_from_tamka(language: str, level: str, success: bool = True,
     with db_session():
         query = (tamka_view.
                  get_where(
-                     lambda t: t.language == language
+                     lambda t: t.language == language  # type: ignore
                      and t.success == success
                      and t.level == level
                      and t.date_of == date.today()
@@ -132,19 +126,17 @@ def start_speaker(language: str, level: str) -> None:
         do_say(language, level, to_say)
         listener = TamkaListener(language)
         sayed = listener.run_recognition(eel.sayToSystem)  # type: ignore
-        q_params: QueryParams = {
-            "user": "testuser",
-            "text": text,
-            "success": False,
-            "level": level,
-            "language": language
+        q_paramas = {
+            "user_pk": 1,
+            "tamka_pk": 1,
+            "success": True
         }
         if text.lower() == sayed:  # on sayed well
-            q_params["success"] = True
-            tamka_view.set(**q_params)
+            game_view.create(**q_paramas)  # type: ignore
             eel.setSuccessPoints()  # type: ignore
         else:  # on sayed bad
-            tamka_view.set(**q_params)
+            q_paramas["success"] = False
+            game_view.create(**q_paramas)  # type: ignore
             eel.setFailedPoints()  # type: ignore
 
 

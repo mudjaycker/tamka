@@ -36,6 +36,7 @@ class GameSession(db.Entity):
 class Statistics(db.Entity):
     user: int = orm.Required("User")
     language: str = orm.Required(str)
+    success_number: int = orm.Required(int)
     by_sentence: int = orm.Optional("StatsBySentence")
     by_level: int = orm.Optional("StatsByLevel")
 

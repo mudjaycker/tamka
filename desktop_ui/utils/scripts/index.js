@@ -1,5 +1,6 @@
 feather.replace();
 let store = new InStore();
+store.set("page", { current: "auth" });
 
 let langMap = { english, français };
 langMap[store.get("language").type]();
@@ -17,13 +18,14 @@ let setLangMap = {
   },
 };
 
-function page(option, id) {
-  const page = document.getElementById(id);
-  if (option === "show") {
-    page.classList.remove(["invisible"]);
-  } else {
-    page.classList.add(["invisible"]);
-  }
+function page(id) {
+  const current_page_id = store.get("page").current;
+  const current_page = document.getElementById(current_page_id);
+  const target_page = document.getElementById(id);
+
+  current_page.classList.add(["invisible"]);
+  target_page.classList.remove(["invisible"]);
+  store.set("page", { current: id });
 }
 
 // document.addEventListener('keydown', (e) => {
@@ -46,18 +48,18 @@ function getLanguage() {
 }
 
 function login() {
-  page("hide", "auth");
-  page("show", "home");
+  // page("hide", "auth");
+  console.log("login");
+  page("home");
 }
 
 function gotoHome() {
-  page("hide", "stats");
-  page("show", "home");
+  // page("hide", "stats");
+  page("home");
 }
 
 function gotoStats() {
   getCharts();
-  page("hide", "home");
-  page("show", "stats");
+  // page("hide", "home");
+  page("stats");
 }
-

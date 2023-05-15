@@ -16,10 +16,9 @@ class User(db.Entity):
     stats_by_sentence: int = orm.Set("StatsBySentence")
     by_level: Sequence[int] = orm.Set("StatsByLevel")
 
-
+#Not to be used explicitly
 class Tamka(db.Entity):
-    user: int = orm.Required("User")
-    text:  str = orm.Required(str)
+    text:  str = orm.Required(str, unique=True)
     language: str = orm.Required(str)
     level: str = orm.Required(str)
     date_of: date = orm.Required(date, default=date.today())
@@ -32,7 +31,7 @@ class GameSession(db.Entity):
     success: str = orm.Required(bool)
     date_of: date = orm.Required(date, default=date.today())
 
-
+#Not to be used explicitly
 class Statistics(db.Entity):
     user: int = orm.Required("User")
     language: str = orm.Required(str)

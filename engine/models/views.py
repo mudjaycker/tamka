@@ -1,15 +1,16 @@
 # mypy: disable-error-code="name-defined"
 # mypy: disable-error-code="union-attr"
 from pony import orm
-from typing import Callable, Sequence, Union, TypedDict
+from typing import Callable, Iterable, Union, TypedDict, Optional
 from datetime import date
 import bcrypt
 from pony.orm.core import Query  # for typing
-from db_models import Tamka, User, GameSession
+from .db_models import Tamka, User, GameSession
+from pydantic import BaseModel, validator, StrictStr
 
-Users = Union[Query, Sequence[User]]
-Tamkas = Union[Query, Sequence[Tamka]]
-GameSessions = Union[Query, Sequence[GameSession]]
+Users = Union[Query, Iterable[User]]
+Tamkas = Union[Query, Iterable[Tamka]]
+GameSessions = Union[Query, Iterable[GameSession]]
 UserTransact = TypedDict("UserTransact", {
     "message_or_entity": Users | str,
     "status": bool
@@ -20,51 +21,63 @@ GameSessionState = TypedDict("GameSessionState", {
     "status": bool
 })
 
+# Not to be used explicitly
+
 
 class TamkaView:
-    def set(self, user: int, text: str, level: str,
-            language: str, date_of: date = date.today()) -> None:
+    def set(self,
+            text: StrictStr,
+            level: StrictStr,
+            language: StrictStr,
+            date_of: date = date.today()) -> None:
         with orm.db_session():
-            Tamka(user=user, text=text, language=language,
+            Tamka(text=text, language=language,
                   level=level, date_of=date_of)
 
+    # has to be deleted
     def get_where(self, condition: Callable[[Tamka], bool]) -> Tamkas:
         with orm.db_session():
             query: Tamkas = Tamka.select(condition)
         return query
 
 
-class UserView:
-    def create(self, username: str, password: str) -> UserTransact:
+class UserView(BaseModel):
+    username: StrictStr
+    password: StrictStr
+    encrypted_password: Optional[bytes] = None
 
+    @validator("password")
+    def encode_password(cls, password):
+        return password.encode('utf-8')
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.encrypted_password = bcrypt.hashpw(self.password, bcrypt.gensalt())
+
+    def create(self) -> UserTransact:
         try:
-            password_encoded = password.encode('utf-8')
-            hashed = bcrypt.hashpw(password_encoded, bcrypt.gensalt())
             with orm.db_session():
-                User(username=username, password=hashed)
+                User(username=self.username, password=self.encrypted_password)
                 return {"message_or_entity": "created", "status": True}
         except Exception as e:
-
             return {"message_or_entity": str(e), "status": False}
 
-    def is_user(self, username: str, password: str) -> bool:
-        password_encoded = password.encode("utf-8")
+    def is_user(self) -> bool:
         try:
             with orm.db_session():
-                query: Users = User.select(lambda x: x.username == username)
+                query: Users = User.select(lambda x: x.username == self.username)
                 user = query[:][0]
 
-                return bcrypt.checkpw(password_encoded, user.password)
+                return bcrypt.checkpw(self.password, user.password)
         except IndexError:
             return False
 
-    def get_user(self, username: str, password: str) -> UserTransact:
-        password_encoded = password.encode("utf-8")
+    def get_user(self) -> UserTransact:
         try:
             with orm.db_session():
-                query: Users = User.select(lambda x: x.username == username)
+                query: Users = User.select(lambda x: x.username == self.username)
                 user = query[:][0]
-                if bcrypt.checkpw(password_encoded, user.password):
+                if bcrypt.checkpw(self.password, user.password):
                     return {"message_or_entity": user, "status": True}
                 return {
                     "message_or_entity": "Incorrect password",
@@ -73,10 +86,10 @@ class UserView:
         except IndexError:
             return {"message_or_entity": str(IndexError), "status": True}
 
-    def delete(self, username: str, password: str) -> bool:
-        if self.is_user(username, password):
+    def delete(self) -> bool:
+        if self.is_user():
             with orm.db_session():
-                user = self.get_user(username, password)
+                user = self.get_user()
 
                 user["message_or_entity"].delete()
                 return True
@@ -84,12 +97,15 @@ class UserView:
 
 
 class GameView:
-    def create(self, user_pk: int, tamka_pk: int, success: bool,
+    def create(self, user_pk: int, text: str, success: bool,
                date_of: date = date.today()) -> GameSessionState:
         try:
             with orm.db_session():
+                tamka = TamkaView().get_where(lambda x: x.text == text)
+                tamka_pk = tamka[:][0].id
                 GameSession(user=user_pk, tamka=tamka_pk, success=success,
                             date_of=date_of)
+                
             return {"message_or_entity": "created", "status": True}
         except Exception as e:
             return {"message_or_entity": str(e), "status": False}
@@ -108,8 +124,9 @@ class GameView:
 # print(g.create(user_pk=1, tamka_pk=1, success=True))
 
 
-# u = UserView()
-# user_args = {"username": "tom", "password": "test123"}
+user_args = {"username": "tom2", "password": "test1234"}
+u = UserView(**user_args)
+print(u.create())
 # print(u.delete(**user_args))
 # print("is user", u.is_user(**user_args))
 # print(u.create(**user_args))

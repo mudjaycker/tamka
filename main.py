@@ -1,5 +1,6 @@
 from jinja2 import Environment, FileSystemLoader
-from engine import Path, eel
+# from engine import Path, eel
+from pathlib import Path
 
 
 root = Path(__file__).parent
@@ -13,4 +14,4 @@ with open(filename, 'w') as fh:
     fh.write(template.render())
 
 
-eel.start("index.html", mode="chrome", jinja_templates='/')
+# eel.start("index.html", mode="chrome", jinja_templates='/')

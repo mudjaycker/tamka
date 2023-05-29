@@ -1,0 +1,58 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>20</x><y>50</y><w>210</w><h>130</h></coordinates><panel_attributes>&lt;&lt;Utilisateur&gt;&gt;
+
+--
+-id: int
+-username: varchar
+-password: byte
+--</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>450</x><y>280</y><w>210</w><h>130</h></coordinates><panel_attributes>&lt;&lt;Statistiques&gt;&gt;
+
+--
+-id: int
+-user: int 
+-language: char 
+--</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>470</x><y>490</y><w>210</w><h>130</h></coordinates><panel_attributes>&lt;&lt;Statistique_par_texte&gt;&gt;
+
+--
+-id: int
+-user: int 
+-sentence: char 
+percentage_of_success: float
+--</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>90</x><y>490</y><w>210</w><h>130</h></coordinates><panel_attributes>&lt;&lt;Statistiques_par_niveau&gt;&gt;
+
+--
+-id: int
+-user: int
+-level: char
+percentage_of_success: float
+--</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>220</x><y>110</y><w>260</w><h>40</h></coordinates><panel_attributes>lt=-
+m1=*
+m2=1
+//teaches to &gt;</panel_attributes><additional_attributes>10;10;240;10</additional_attributes></element><element><id>Relation</id><coordinates><x>110</x><y>170</y><w>40</w><h>140</h></coordinates><panel_attributes>lt=-
+m1=*
+m2=1
+//teaches to &gt;</panel_attributes><additional_attributes>10;10;10;120</additional_attributes></element><element><id>Relation</id><coordinates><x>540</x><y>190</y><w>40</w><h>110</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=*
+//teaches to &gt;</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>Relation</id><coordinates><x>230</x><y>340</y><w>240</w><h>170</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=1
+//teaches to &gt;</panel_attributes><additional_attributes>220;10;130;10;130;120;10;120;10;150</additional_attributes></element><element><id>Relation</id><coordinates><x>550</x><y>400</y><w>40</w><h>110</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=1
+//teaches to &gt;</panel_attributes><additional_attributes>10;90;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>30</x><y>290</y><w>210</w><h>160</h></coordinates><panel_attributes>&lt;&lt;Texte_defi&gt;&gt;
+
+--
+-id: int
+-user: int 
+-text:  varchar
+-language: char
+-level: char 
+-date_of: date 
+--</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>460</x><y>70</y><w>210</w><h>130</h></coordinates><panel_attributes>&lt;&lt;Session_de_jeux&gt;&gt;
+
+--
+-id: int
+-user: int 
+-succes: boolean 
+-date_of: datetime
+--</panel_attributes><additional_attributes></additional_attributes></element></diagram>

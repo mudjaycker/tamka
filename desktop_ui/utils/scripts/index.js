@@ -29,6 +29,7 @@ let setLangMap = {
   },
 };
 
+// navigation processes
 function page(id) {
   const current_page_id = store.get("page").current;
   const current_page = document.getElementById(current_page_id);
@@ -38,6 +39,17 @@ function page(id) {
   target_page.classList.remove(["invisible"]);
   store.set("page", { current: id });
 }
+
+function gotoHome() {
+  page("home");
+}
+
+function gotoStats() {
+  getCharts();
+  page("stats");
+}
+
+// end navigation processes
 
 // document.addEventListener('keydown', (e) => {
 // e.preventDefault()
@@ -58,20 +70,21 @@ function getLanguage() {
   return store.get("language").type;
 }
 
-// authentication proccesses --------------------------
+// authentication processes --------------------------
 function loginOrSignup() {
-  eel.do_authentication(
-    usernameTextField(),
-    passwordTextField(),
-    authType()
-  )((res) => {
-    if (res) {
-      page("home");
-    } else {
-      if (authType === "login") alert("wrong username or password");
-      else alert("username already exists");
-    }
-  });
+  // eel.do_authentication(
+    // usernameTextField(),
+    // passwordTextField(),
+    // authType()
+  // )((res) => {
+    // if (res) {
+      // page("home");
+    // } else {
+      // if (authType === "login") alert("wrong username or password");
+      // else alert("username already exists");
+    // }
+  // });
+  page("home")
 }
 
 function gotoLogin() {
@@ -96,14 +109,4 @@ function gotoLoginOrToSignup() {
   map[authType()]()
 }
 
-// end authentication proccesses ---------------------
-
-function gotoHome() {
-  page("home");
-}
-
-function gotoStats() {
-  getCharts();
-  // page("hide", "home");
-  page("stats");
-}
+// end authentication processes ---------------------

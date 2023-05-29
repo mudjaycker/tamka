@@ -146,7 +146,7 @@
   <script>
     feather.replace();
 let store = new InStore();
-store.set("page", { current: "auth" });
+// store.set("page", { current: "auth" });
 store.set("auth", { type: "login" });
 let authType = () => store.get("auth").type;
 
@@ -250,9 +250,9 @@ function gotoHome() {
 
 function gotoStats() {
   getCharts();
-  // page("hide", "home");
   page("stats");
 }
+page(store.get("page").current)
     let currentLevel = null;
 function getSentences(level) {
   let lang = getLanguage();

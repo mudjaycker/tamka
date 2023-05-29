@@ -5,7 +5,7 @@ from typing import Callable, Iterable, Union, TypedDict, Optional
 from datetime import date
 import bcrypt
 from pony.orm.core import Query  # for typing
-from .db_models import Tamka, User, GameSession
+from . db_models import Tamka, User, GameSession
 from pydantic import BaseModel, validator, StrictStr
 
 Users = Union[Query, Iterable[User]]
@@ -22,7 +22,6 @@ GameSessionState = TypedDict("GameSessionState", {
 })
 
 # Not to be used explicitly
-
 
 class TamkaView:
     def set(self,
@@ -44,7 +43,7 @@ class TamkaView:
 class UserView(BaseModel):
     username: StrictStr
     password: StrictStr
-    encrypted_password: Optional[bytes] = None
+    encrypted_password: Optional[str] = None
 
     @validator("password")
     def encode_password(cls, password):
@@ -52,7 +51,7 @@ class UserView(BaseModel):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.encrypted_password = bcrypt.hashpw(self.password, bcrypt.gensalt())
+        self.encrypted_password: Optional[bytes] = bcrypt.hashpw(self.password, bcrypt.gensalt())
 
     def create(self) -> UserTransact:
         try:
@@ -105,7 +104,7 @@ class GameView:
                 tamka_pk = tamka[:][0].id
                 GameSession(user=user_pk, tamka=tamka_pk, success=success,
                             date_of=date_of)
-                
+
             return {"message_or_entity": "created", "status": True}
         except Exception as e:
             return {"message_or_entity": str(e), "status": False}
@@ -124,9 +123,9 @@ class GameView:
 # print(g.create(user_pk=1, tamka_pk=1, success=True))
 
 
-user_args = {"username": "tom2", "password": "test1234"}
-u = UserView(**user_args)
-print(u.create())
+# user_args = {"username": "tom2", "password": "test1234"}
+# u = UserView(**user_args)
+# print(u.create())
 # print(u.delete(**user_args))
 # print("is user", u.is_user(**user_args))
 # print(u.create(**user_args))

@@ -1,6 +1,8 @@
 feather.replace();
 let store = new InStore();
 store.set("page", { current: "auth" });
+let usernameTextField = () => document.getElementById("username-text-field").value;
+  let passwordTextField = ()=> document.getElementById("password-text-field").value
 
 let langMap = { english, français };
 langMap[store.get("language").type]();
@@ -48,13 +50,20 @@ function getLanguage() {
 }
 
 function login() {
-  // page("hide", "auth");
-  console.log("login");
-  page("home");
+  eel.do_authentication(
+    usernameTextField(),
+    passwordTextField(),
+    "login"
+  )((res) => {
+    if (res) {
+      page("home");
+    } else {
+      alert("wrong username or password");
+    }
+  });
 }
 
 function gotoHome() {
-  // page("hide", "stats");
   page("home");
 }
 

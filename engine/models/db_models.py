@@ -11,7 +11,6 @@ class User(db.Entity):
     username: str = orm.Required(str, unique=True)
     password: bytes = orm.Required(bytes)
     game: Sequence[int] = orm.Set("GameSession")
-    tamka: Sequence[int] = orm.Set("Tamka")
     statistic: Sequence[int] = orm.Set("Statistics")
     stats_by_sentence: int = orm.Set("StatsBySentence")
     by_level: Sequence[int] = orm.Set("StatsByLevel")

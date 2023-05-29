@@ -22,11 +22,11 @@
 <body>
   <div id="auth"><div class="group">
   <div class="form__group">
-    <input class="form__field" type="text" />
+    <input id="username-text-field" class="form__field" type="text" />
     <label class="form__label" for="">Username</label>
   </div>
   <div class="form__group">
-    <input type="password" class="form__field" type="text" />
+    <input id="password-text-field" type="password" class="form__field" type="text" />
     <label class="form__label" for="">Password</label>
   </div>
 
@@ -150,6 +150,8 @@
     feather.replace();
 let store = new InStore();
 store.set("page", { current: "auth" });
+let usernameTextField = () => document.getElementById("username-text-field").value;
+  let passwordTextField = ()=> document.getElementById("password-text-field").value
 
 let langMap = { english, français };
 langMap[store.get("language").type]();
@@ -197,13 +199,21 @@ function getLanguage() {
 }
 
 function login() {
-  // page("hide", "auth");
-  console.log("login");
-  page("home");
+  eel.do_authentication(
+    usernameTextField(),
+    passwordTextField(),
+    "login"
+  )((res) => {
+    console.log("res ====>", res);
+    if (res) {
+      page("home");
+    } else {
+      alert("wrong username or password");
+    }
+  });
 }
 
 function gotoHome() {
-  // page("hide", "stats");
   page("home");
 }
 

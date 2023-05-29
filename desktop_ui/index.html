@@ -70,7 +70,7 @@
     <nav class="side-item">
       <i data-feather="loader" class="item-icon"></i>
       <span
-        id="reload-button"
+        id="go-to-login"
         class="item-text"
         onclick="gotoLogin()"
         >Go To Login</span
@@ -109,7 +109,6 @@
           <span
             id="lang"
             class="task__item-text"
-            onclick="setLangMap[store.get('language').type]()"
             >Ma Langue
           </span>
         </nav>
@@ -144,24 +143,100 @@
   <script src="./third_parts/feather_icons.min.js"></script>
 
   <script>
-    feather.replace();
+    feather.replace(); // init icons
+
+// Declarations ---------------------------
 let store = new InStore();
-// store.set("page", { current: "auth" });
+store.set("page", { current: "auth" });
 store.set("auth", { type: "login" });
 let authType = () => store.get("auth").type;
+let changeLangBtn = document.getElementById("lang")
+
 
 let usernameTextField = () =>
   document.getElementById("username-text-field").value;
 
 let passwordTextField = () =>
   document.getElementById("password-text-field").value;
+// end Declarations ---------------------------
 
-let authBtn = document.getElementById("auth-btn");
-let gotoLoginOrSignupButton = document.getElementById("login-or-signup");
+// Functions to set up the window -----------------
+// document.addEventListener('keydown', (e) => {
+// e.preventDefault()
+// if (e.key.toLowerCase() === 'c' && e.ctrlKey && e.shiftKey) {
+// alert('cannot show dev mode');
+// }
+// });
+addEventListener("contextmenu", (event) => {
+  event.preventDefault();
+});
 
+// end Functions to set up the window -----------------
+
+
+// Navigation processes------------------
+function page(id) {
+  const current_page_id = store.get("page").current;
+  const current_page = document.getElementById(current_page_id);
+  const target_page = document.getElementById(id);
+
+  current_page.classList.add(["invisible"]);
+  target_page.classList.remove(["invisible"]);
+  store.set("page", { current: id });
+}
+
+function gotoHome() {
+  page("home");
+}
+
+function gotoStats() {
+  getCharts();
+  page("stats");
+}
+// end Navigation processes------------------
+
+// Authentication processes --------------------------
+function loginOrSignup() {
+  eel.do_authentication(
+    usernameTextField(),
+    passwordTextField(),
+    authType()
+  )((res) => {
+    if (res) {
+      page("home");
+    } else {
+      alert(alertMessagesLang[getLanguage()][authType()]);
+    }
+  });
+}
+
+function gotoLogin() {
+  store.set("auth", { type: "login" });
+  authBtn.textContent = authBtnsLang[getLanguage()]["login"];
+  gotoAuthBtn.textContent = gotoAuthLang[getLanguage()]["signup"];
+  page("auth");
+}
+
+function gotoSignup() {
+  store.set("auth", { type: "signup" });
+  authBtn.textContent = authBtnsLang[getLanguage()]["signup"];
+  gotoAuthBtn.textContent = gotoAuthLang[getLanguage()]["login"];
+}
+
+function gotoLoginOrToSignup() {
+  let map = {
+    signup: gotoLogin,
+    login: gotoSignup,
+  };
+  console.log(authType());
+  map[authType()]();
+}
+// end Authentication processes --------------------------
+    let currentLevel = null;
+
+// Manage languages --------------------
 let langMap = { english, français };
 langMap[store.get("language").type]();
-
 let setLangMap = {
   english: () => {
     store.set("language", { type: "français" });
@@ -174,86 +249,61 @@ let setLangMap = {
     console.log("english language is set");
   },
 };
-
-function page(id) {
-  const current_page_id = store.get("page").current;
-  const current_page = document.getElementById(current_page_id);
-  const target_page = document.getElementById(id);
-
-  current_page.classList.add(["invisible"]);
-  target_page.classList.remove(["invisible"]);
-  store.set("page", { current: id });
+function getLanguage() {
+  return store.get("language").type;
 }
 
-// document.addEventListener('keydown', (e) => {
-// e.preventDefault()
-// if (e.key.toLowerCase() === 'c' && e.ctrlKey && e.shiftKey) {
-// alert('cannot show dev mode');
-// }
-// });
-addEventListener("contextmenu", (event) => {
-  event.preventDefault();
+changeLangBtn.addEventListener("click", (e) => {
+  setLangMap[getLanguage()]();
 });
+// end Manage languages --------------------
 
 function translate(target, text) {
   let targetTo = document.getElementById(target);
   targetTo.innerText = text;
 }
 
-function getLanguage() {
-  return store.get("language").type;
-}
+let authBtn = document.getElementById("auth-btn");
+let gotoAuthBtn = document.getElementById("login-or-signup");
 
-// authentication proccesses --------------------------
-function loginOrSignup() {
-  eel.do_authentication(
-    usernameTextField(),
-    passwordTextField(),
-    authType()
-  )((res) => {
-    if (res) {
-      page("home");
-    } else {
-      if (authType === "login") alert("wrong username or password");
-      else alert("username already exists");
-    }
-  });
-}
+let alertMessagesLang = {
+  english: {
+    signup: "username already exists",
+    login: "wrong username or password",
+  },
 
-function gotoLogin() {
-  store.set("auth", { type: "login" });
-  authBtn.textContent = "Login";
-  gotoLoginOrSignupButton.textContent = "Create an account"
-  page("auth");
-}
+  français: {
+    signup: "Ce nom d'utilisateur est déjà utilisé",
+    login: "Le nom d'utilisateur ou le mot de passe est incorrect",
+  },
+};
 
-function gotoSignup() {
-  store.set("auth", { type: "signup" });
-  authBtn.textContent = "Sign Up";
-  gotoLoginOrSignupButton.textContent = "Go to login"
-}
+let authBtnsLang = {
+  english: {
+    signup: "Sign up",
+    login: "Log in",
+  },
 
-function gotoLoginOrToSignup() {
-  let map = {
-    signup: gotoLogin,
-    login: gotoSignup,
-  };
-  console.log(authType());
-  map[authType()]()
-}
+  français: {
+    signup: "Créer un compte",
+    login: "Se connecter",
+  },
+};
 
-// end authentication proccesses ---------------------
+let gotoAuthLang = {
+  english: {
+    signup: "Go to Sign up",
+    login: "Go to Log in",
+  },
 
-function gotoHome() {
-  page("home");
-}
+  français: {
+    signup: "Vous avez déjà un compte",
+    login: "Vous n'avez pas de compte",
+  },
+};
+authBtn.textContent = authBtnsLang[getLanguage()]["login"];
+gotoAuthBtn.textContent = gotoAuthLang[getLanguage()]["signup"];
 
-function gotoStats() {
-  getCharts();
-  page("stats");
-}
-page(store.get("page").current)
-    let currentLevel = null;
 function getSentences(level) {
   let lang = getLanguage();
   let totalPoint = document.getElementById("total-points");
@@ -285,7 +335,7 @@ function english() {
   translate("success", "Success");
   translate("failures", "Failures");
   translate("remaining-words", "Remaining Words");
-  translate("reload-button", "Restart");
+  translate("go-to-login", "Go To Login");
 }
 function français() {
   translate("choice-easy", "Facile");
@@ -296,11 +346,7 @@ function français() {
   translate("success", "Réussites");
   translate("failures", "Echecs");
   translate("remaining-words", "Mots Restants");
-  translate("reload-button", "Recommencer");
-}
-
-async function restart() {
-  await eel.restart(getLanguage(), currentLevel)();
+  translate("go-to-login", "Aller à la page de connexion");
 }
 
 eel.expose(setSuccessPoints);

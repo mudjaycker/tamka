@@ -11,11 +11,7 @@ let usernameTextField = () =>
 
 let passwordTextField = () =>
   document.getElementById("password-text-field").value;
-
-let authBtn = document.getElementById("auth-btn");
-let gotoLoginOrSignupButton = document.getElementById("login-or-signup");
 // end Declarations ---------------------------
-
 
 // Functions to set up the window -----------------
 // document.addEventListener('keydown', (e) => {
@@ -28,31 +24,7 @@ addEventListener("contextmenu", (event) => {
   event.preventDefault();
 });
 
-function translate(target, text) {
-  let targetTo = document.getElementById(target);
-  targetTo.innerText = text;
-}
 // end Functions to set up the window -----------------
-
-// Manage languages --------------------
-let langMap = { english, français };
-langMap[store.get("language").type]();
-let setLangMap = {
-  english: () => {
-    store.set("language", { type: "français" });
-    langMap[store.get("language").type]();
-    console.log("french language is set");
-  },
-  français: () => {
-    store.set("language", { type: "english" });
-    langMap[store.get("language").type]();
-    console.log("english language is set");
-  },
-};
-function getLanguage() {
-  return store.get("language").type;
-}
-// end Manage languages --------------------
 
 
 // Navigation processes------------------
@@ -78,32 +50,30 @@ function gotoStats() {
 
 // Authentication processes --------------------------
 function loginOrSignup() {
-  // eel.do_authentication(
-  // usernameTextField(),
-  // passwordTextField(),
-  // authType()
-  // )((res) => {
-  // if (res) {
-  // page("home");
-  // } else {
-  // if (authType === "login") alert("wrong username or password");
-  // else alert("username already exists");
-  // }
-  // });
-  page("home");
+  eel.do_authentication(
+    usernameTextField(),
+    passwordTextField(),
+    authType()
+  )((res) => {
+    if (res) {
+      page("home");
+    } else {
+      alert(alertMessagesLang[getLanguage()][authType()]);
+    }
+  });
 }
 
 function gotoLogin() {
   store.set("auth", { type: "login" });
-  authBtn.textContent = "Login";
-  gotoLoginOrSignupButton.textContent = "Create an account";
+  authBtn.textContent = authBtnsLang[getLanguage()]["login"];
+  gotoAuthBtn.textContent = gotoAuthLang[getLanguage()]["signup"];
   page("auth");
 }
 
 function gotoSignup() {
   store.set("auth", { type: "signup" });
-  authBtn.textContent = "Sign Up";
-  gotoLoginOrSignupButton.textContent = "Go to login";
+  authBtn.textContent = authBtnsLang[getLanguage()]["signup"];
+  gotoAuthBtn.textContent = gotoAuthLang[getLanguage()]["login"];
 }
 
 function gotoLoginOrToSignup() {
@@ -111,7 +81,6 @@ function gotoLoginOrToSignup() {
     signup: gotoLogin,
     login: gotoSignup,
   };
-  console.log(authType());
   map[authType()]();
 }
 // end Authentication processes --------------------------

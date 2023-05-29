@@ -1,5 +1,3 @@
-feather.replace(); // init icons
-
 // Declarations ---------------------------
 let store = new InStore();
 store.set("page", { current: "auth" });

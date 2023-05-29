@@ -11,11 +11,6 @@ from pydantic import BaseModel, validator, StrictStr
 Users = Union[Query, Iterable[User]]
 Tamkas = Union[Query, Iterable[Tamka]]
 GameSessions = Union[Query, Iterable[GameSession]]
-UserTransact = TypedDict("UserTransact", {
-    "message_or_entity": Users | str,
-    "status": bool
-})
-
 GameSessionState = TypedDict("GameSessionState", {
     "message_or_entity": GameSessions | str,
     "status": bool
@@ -53,13 +48,13 @@ class UserView(BaseModel):
         super().__init__(**kwargs)
         self.encrypted_password: Optional[bytes] = bcrypt.hashpw(self.password, bcrypt.gensalt())
 
-    def create(self) -> UserTransact:
+    def create(self) -> bool:
         try:
             with orm.db_session():
                 User(username=self.username, password=self.encrypted_password)
-                return {"message_or_entity": "created", "status": True}
-        except Exception as e:
-            return {"message_or_entity": str(e), "status": False}
+                return True
+        except:
+            return False
 
     def is_user(self) -> bool:
         try:
@@ -68,22 +63,15 @@ class UserView(BaseModel):
                 user = query[:][0]
 
                 return bcrypt.checkpw(self.password, user.password)
-        except IndexError:
+        except:
             return False
 
-    def get_user(self) -> UserTransact:
-        try:
-            with orm.db_session():
+    def get_user(self) -> User | str:
+            if self.is_user():
                 query: Users = User.select(lambda x: x.username == self.username)
                 user = query[:][0]
-                if bcrypt.checkpw(self.password, user.password):
-                    return {"message_or_entity": user, "status": True}
-                return {
-                    "message_or_entity": "Incorrect password",
-                    "status": False
-                }
-        except IndexError:
-            return {"message_or_entity": str(IndexError), "status": True}
+                return user
+            return "User does not exist"
 
     def delete(self) -> bool:
         if self.is_user():

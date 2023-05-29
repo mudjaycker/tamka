@@ -1,8 +1,17 @@
 feather.replace();
 let store = new InStore();
 store.set("page", { current: "auth" });
-let usernameTextField = () => document.getElementById("username-text-field").value;
-  let passwordTextField = ()=> document.getElementById("password-text-field").value
+store.set("auth", { type: "login" });
+let authType = () => store.get("auth").type;
+
+let usernameTextField = () =>
+  document.getElementById("username-text-field").value;
+
+let passwordTextField = () =>
+  document.getElementById("password-text-field").value;
+
+let authBtn = document.getElementById("auth-btn");
+let gotoLoginOrSignupButton = document.getElementById("login-or-signup");
 
 let langMap = { english, français };
 langMap[store.get("language").type]();
@@ -49,19 +58,45 @@ function getLanguage() {
   return store.get("language").type;
 }
 
-function login() {
+// authentication proccesses --------------------------
+function loginOrSignup() {
   eel.do_authentication(
     usernameTextField(),
     passwordTextField(),
-    "login"
+    authType()
   )((res) => {
     if (res) {
       page("home");
     } else {
-      alert("wrong username or password");
+      if (authType === "login") alert("wrong username or password");
+      else alert("username already exists");
     }
   });
 }
+
+function gotoLogin() {
+  store.set("auth", { type: "login" });
+  authBtn.textContent = "Login";
+  gotoLoginOrSignupButton.textContent = "Create an account"
+  page("auth");
+}
+
+function gotoSignup() {
+  store.set("auth", { type: "signup" });
+  authBtn.textContent = "Sign Up";
+  gotoLoginOrSignupButton.textContent = "Go to login"
+}
+
+function gotoLoginOrToSignup() {
+  let map = {
+    signup: gotoLogin,
+    login: gotoSignup,
+  };
+  console.log(authType());
+  map[authType()]()
+}
+
+// end authentication proccesses ---------------------
 
 function gotoHome() {
   page("home");

@@ -49,21 +49,24 @@ $gray: #9b9b9b;
     transition: 0.2s;
     font-size: 1rem;
     color: $primary;
-    font-weight:700;    
+    font-weight: 700;
   }
-  padding-bottom: 6px;  
+  padding-bottom: 6px;
   font-weight: 700;
   border-width: 3px;
-  border-image: linear-gradient(to right, $primary,$secondary);
+  border-image: linear-gradient(to right, $primary, $secondary);
   border-image-slice: 1;
 }
 /* reset input */
-.form__field{
-  &:required,&:invalid { box-shadow:none; }
+.form__field {
+  &:required,
+  &:invalid {
+    box-shadow: none;
+  }
 }
 /* demo */
 // body {
-//   font-family: 'Poppins', sans-serif; 
+//   font-family: 'Poppins', sans-serif;
 //   display: flex;
 //   flex-direction: column;
 //   justify-content: center;
@@ -73,13 +76,24 @@ $gray: #9b9b9b;
 //   background-color:#222222;
 // }
 
-.group{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    row-gap: 60px;
-    background-color:#222222;
-    flex-direction: column;
-    width: 800px;
-    height: 500px;
+.group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  row-gap: 60px;
+  background-color: #222222;
+  flex-direction: column;
+  width: 800px;
+  height: 500px;
+}
+
+.auth-btn {
+  background-color: #25497e;
+  color: white;
+  width: 30%;
+  height: 10%;
+  text-align: center;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: large;
 }

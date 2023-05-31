@@ -1,11 +1,10 @@
 # mypy: disable-error-code="name-defined"
 # mypy: disable-error-code="union-attr"
-from pony import orm
 from typing import Callable, Iterable, Union, TypedDict, Optional
 from datetime import date
 import bcrypt
 from pony.orm.core import Query  # for typing
-from . db_models import Tamka, User, GameSession
+from . db_models import orm, Tamka, User, GameSession
 from pydantic import BaseModel, validator, StrictStr
 
 Users = Union[Query, Iterable[User]]
@@ -15,7 +14,6 @@ GameSessionState = TypedDict("GameSessionState", {
     "message_or_entity": GameSessions | str,
     "status": bool
 })
-
 # Not to be used explicitly
 
 class TamkaView:
@@ -28,10 +26,8 @@ class TamkaView:
             Tamka(text=text, language=language,
                   level=level, date_of=date_of)
 
-    # has to be deleted
     def get_where(self, condition: Callable[[Tamka], bool]) -> Tamkas:
-        with orm.db_session():
-            query: Tamkas = Tamka.select(condition)
+        query: Tamkas = Tamka.select(condition)
         return query
 
 

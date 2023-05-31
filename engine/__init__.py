@@ -4,6 +4,7 @@ from pathlib import Path
 from models.views import TamkaView, UserView, GameView
 from stt_tts.speech2text import TamkaListener
 from stt_tts.text2speech import TamkaSpeaker
+from text_from_db import get_texts
 
 
 UI_DIR = Path(__file__).parent.parent
@@ -31,12 +32,12 @@ def do_recognition(language: str):
 
 
 # @eel.expose
-def do_speak_challenge(language: str):
+def do_speak_challenge(language: str, level:str):
     first_words = {
         "english": "say: ",
         "français": "dites: "
     }
-    message = "Do you wanna speak ?"
+    message = get_texts(language, level)
     speaker = TamkaSpeaker(
         message=first_words[language]+message,
         language=language
@@ -44,4 +45,4 @@ def do_speak_challenge(language: str):
     speaker.speak()
 
 
-do_speak_challenge("english")
+do_speak_challenge("english", "easy")

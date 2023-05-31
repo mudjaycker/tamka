@@ -2,11 +2,10 @@
 import eel
 from pathlib import Path
 from .models.views import TamkaView, UserView, GameView
-from typing import Final
-import eel
+from .stt_tts.speech2text import TamkaListener
 
 
-UI_DIR: Final[Path] = Path(__file__).parent.parent
+UI_DIR = Path(__file__).parent.parent
 eel.init(str(Path(UI_DIR, "desktop_ui")))
 
 @eel.expose
@@ -20,3 +19,9 @@ def do_authentication(username: str, password: str, action: str):
     }
     
     return actions_map[action]()
+
+@eel.expose
+def do_recognition(language):
+    listener = TamkaListener(language)
+    text = listener.run_recognition()
+    eel.sayToSystem(text)

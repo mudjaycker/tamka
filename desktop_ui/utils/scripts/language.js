@@ -73,15 +73,9 @@ gotoAuthBtn.textContent = gotoAuthLang[getLanguage()]["signup"];
 
 function getSentences(level) {
   let lang = getLanguage();
-  let totalPoint = document.getElementById("total-points");
-  eel.get_datas_length(
-    getLanguage(),
-    level
-  )((len) => {
-    totalPoint.innerText = len;
-  });
   currentLevel = level;
-  eel.start_speaker(lang, level);
+  // eel.start_speaker(lang, level);
+  eel.do_recognition(lang);
 }
 
 function setSuccessPoints() {

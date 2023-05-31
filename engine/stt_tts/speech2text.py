@@ -15,7 +15,7 @@ def play(song_path: str) -> None:
 
 class TamkaListener:
     def __init__(self, language: str = "français") -> None:
-        MODEL_PATH = str(Path(Path(__file__).parent, language+"_model"))
+        MODEL_PATH = str(Path(Path(__file__).parent, "model", language+"_model"))
         model = Model(MODEL_PATH)
 
         self.__recognizer = KaldiRecognizer(model, 16000)
@@ -28,7 +28,7 @@ class TamkaListener:
             frames_per_buffer=8192
         )
 
-    def run_recognition(self, ui_function: Callable) -> str:
+    def run_recognition(self) -> str:
 
         self.stream.start_stream()
         play(song_path)
@@ -41,7 +41,6 @@ class TamkaListener:
                 text: str = self.__recognizer.Result()[14: -3]
 
                 if len(text) > 0:
-                    ui_function(text)
                     self.mic.close(stream=self.stream)
                     self.mic.terminate()
                     return text

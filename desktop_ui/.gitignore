@@ -1,4 +1,2 @@
 __pycache__/
 .vscode/
-graphs/*
-engine/models/database.sqlite

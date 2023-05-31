@@ -10,11 +10,11 @@
   <link rel="stylesheet" href="./assets/style/form.css" />
   <script type="text/javascript" src="/eel.js"></script>
   <script src="./third_parts/chart.js"></script>
-  <script type="module" src="./utils/element.js"></script>
-  <script type="module" src="./utils/makeChart.js"></script>
-  <script type="module" src="./utils/storage.js"></script>
+  <script src="./utils/element.js"></script>
+  <script src="./utils/makeChart.js"></script>
+  <script src="./utils/storage.js"></script>
 
-
+  
 
   <title>Tamka</title>
 </head>
@@ -138,12 +138,315 @@
       <canvas id="myChart"></canvas>
     </div></div>
 
-  <script src="./third_parts/feather_icons.min.js"></script> 
-  <script type="module" src="./utils/say-to-system.js"></script>
-  <script type="module" src="./utils/say-to-user.js"></script>
+  <script src="./utils/say-to-system.js"></script>
+  <script src="./utils/say-to-user.js"></script>
+  <script src="./third_parts/feather_icons.min.js"></script>
+  <script src="./utils/init_icons.js"></script>
 
-  <script type="module" src="./utils/makeChart.js"></script>
-  <script type="module" src="./utils/scripts/index.js"></script>
+  <script>
+    // Declarations ---------------------------
+let store = new InStore();
+store.set("page", { current: "auth" });
+store.set("auth", { type: "login" });
+let authType = () => store.get("auth").type;
+
+let usernameTextField = () =>
+  document.getElementById("username-text-field").value;
+
+let passwordTextField = () =>
+  document.getElementById("password-text-field").value;
+// end Declarations ---------------------------
+
+// Functions to set up the window -----------------
+// document.addEventListener('keydown', (e) => {
+// e.preventDefault()
+// if (e.key.toLowerCase() === 'c' && e.ctrlKey && e.shiftKey) {
+// alert('cannot show dev mode');
+// }
+// });
+addEventListener("contextmenu", (event) => {
+  event.preventDefault();
+});
+
+// end Functions to set up the window -----------------
+
+
+// Navigation processes------------------
+function page(id) {
+  const current_page_id = store.get("page").current;
+  const current_page = document.getElementById(current_page_id);
+  const target_page = document.getElementById(id);
+
+  current_page.classList.add(["invisible"]);
+  target_page.classList.remove(["invisible"]);
+  store.set("page", { current: id });
+}
+
+function gotoHome() {
+  page("home");
+}
+
+function gotoStats() {
+  getCharts();
+  page("stats");
+}
+// end Navigation processes------------------
+
+// Authentication processes --------------------------
+function loginOrSignup() {
+  eel.do_authentication(
+    usernameTextField(),
+    passwordTextField(),
+    authType()
+  )((res) => {
+    if (res) {
+      page("home");
+    } else {
+      alert(alertMessagesLang[getLanguage()][authType()]);
+    }
+  });
+}
+
+function gotoLogin() {
+  store.set("auth", { type: "login" });
+  authBtn.textContent = authBtnsLang[getLanguage()]["login"];
+  gotoAuthBtn.textContent = gotoAuthLang[getLanguage()]["signup"];
+  page("auth");
+}
+
+function gotoSignup() {
+  store.set("auth", { type: "signup" });
+  authBtn.textContent = authBtnsLang[getLanguage()]["signup"];
+  gotoAuthBtn.textContent = gotoAuthLang[getLanguage()]["login"];
+}
+
+function gotoLoginOrToSignup() {
+  let map = {
+    signup: gotoLogin,
+    login: gotoSignup,
+  };
+  map[authType()]();
+}
+// end Authentication processes --------------------------
+    // Declarations -----------------------
+let authBtn = document.getElementById("auth-btn");
+let gotoAuthBtn = document.getElementById("login-or-signup");
+let currentLevel = null;
+let changeLangBtn = document.getElementById("lang");
+let langMap = { english, français };
+langMap[store.get("language").type]();
+let setLangMap = {
+  english: () => {
+    store.set("language", { type: "français" });
+    langMap[store.get("language").type]();
+    console.log("french language is set");
+  },
+  français: () => {
+    store.set("language", { type: "english" });
+    langMap[store.get("language").type]();
+    console.log("english language is set");
+  },
+};
+
+let alertMessagesLang = {
+  english: {
+    signup: "username already exists",
+    login: "wrong username or password",
+  },
+
+  français: {
+    signup: "Ce nom d'utilisateur est déjà utilisé",
+    login: "Le nom d'utilisateur ou le mot de passe est incorrect",
+  },
+};
+
+let authBtnsLang = {
+  english: {
+    signup: "Sign up",
+    login: "Log in",
+  },
+
+  français: {
+    signup: "Créer un compte",
+    login: "Se connecter",
+  },
+};
+
+let gotoAuthLang = {
+  english: {
+    signup: "Go to Sign up",
+    login: "Go to Log in",
+  },
+
+  français: {
+    signup: "Vous avez déjà un compte",
+    login: "Vous n'avez pas de compte",
+  },
+};
+// end Declarations -----------------------
+
+function getLanguage() {
+  return store.get("language").type;
+}
+
+changeLangBtn.addEventListener("click", (e) => {
+  setLangMap[getLanguage()]();
+});
+
+function translate(target, text) {
+  let targetTo = document.getElementById(target);
+  targetTo.innerText = text;
+}
+
+authBtn.textContent = authBtnsLang[getLanguage()]["login"];
+gotoAuthBtn.textContent = gotoAuthLang[getLanguage()]["signup"];
+
+function getSentences(level) {
+  let lang = getLanguage();
+  let totalPoint = document.getElementById("total-points");
+  eel.get_datas_length(
+    getLanguage(),
+    level
+  )((len) => {
+    totalPoint.innerText = len;
+  });
+  currentLevel = level;
+  eel.start_speaker(lang, level);
+}
+
+function setSuccessPoints() {
+  let successPoints = document.getElementById("success-points");
+  successPoints.innerText = Number(successPoints.textContent) + 1;
+}
+function setFailedPoints() {
+  let failedPoints = document.getElementById("failed-points");
+  failedPoints.innerText = Number(failedPoints.textContent) + 1;
+}
+
+function english() {
+  translate("choice-easy", "Easy");
+  translate("choice-medium", "Medium");
+  translate("choice-hard", "Hard");
+  translate("show-statistics", "Show Statistics");
+  translate("lang", "French language");
+  translate("success", "Success");
+  translate("failures", "Failures");
+  translate("remaining-words", "Remaining Words");
+  translate("go-to-login", "Go To Login");
+}
+function français() {
+  translate("choice-easy", "Facile");
+  translate("choice-medium", "Moyen");
+  translate("choice-hard", "Difficile");
+  translate("show-statistics", "Voir les statistiques");
+  translate("lang", "Langue anglaise");
+  translate("success", "Réussites");
+  translate("failures", "Echecs");
+  translate("remaining-words", "Mots Restants");
+  translate("go-to-login", "Aller à la page de connexion");
+}
+
+eel.expose(setSuccessPoints);
+eel.expose(setFailedPoints);
+eel.expose(getLanguage);
+    function getCharts() {
+  setTimeout(async () => {
+    let storage = new InStore();
+    let language = storage.get("language").type;
+
+    let total_qty = await eel.get_tamka_qty(language)();
+    let easy_qty = await eel.get_from_tamka(language, "easy", true, false)();
+    let medium_qty = await eel.get_from_tamka(
+      language,
+      "medium",
+      true,
+      false
+    )();
+    let hard_qty = await eel.get_from_tamka(language, "hard", true, false)();
+
+    let language_type = language + "_language";
+    storage.set(language_type, { easy_qty, total_qty, medium_qty, hard_qty });
+  }, 500);
+
+  setTimeout(() => {
+    let storage = new InStore();
+    let language = storage.get("language").type;
+
+    const ctx = document.getElementById("myChart");
+
+    let language_type = language + "_language";
+    let { easy_qty, total_qty, medium_qty, hard_qty } =
+      storage.get(language_type);
+
+    let languageMap = {
+      français: {
+        easy: "facile",
+        medium: "moyen",
+        hard: "difficile",
+        title: "Statistiques de Prononciation",
+      },
+
+      english: {
+        easy: "easy",
+        medium: "medium",
+        hard: "hard",
+        title: "Pronounciation Statistics",
+      },
+    };
+
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: [
+          languageMap[language].easy,
+          languageMap[language].medium,
+          languageMap[language].hard,
+        ],
+        datasets: [
+          {
+            label: languageMap[language].title,
+            data: [
+              (easy_qty * 100) / total_qty,
+              (medium_qty * 100) / total_qty,
+              (hard_qty * 100) / total_qty,
+            ],
+            backgroundColor: [
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(255, 159, 64, 0.2)",
+              "rgb(255, 99, 132, 0.2)",
+            ],
+            borderColor: [
+              "rgb(75, 192, 192)",
+              "rgb(255, 159, 64)",
+              "rgb(255, 99, 132)",
+            ],
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            min: 0,
+            max: 100,
+            ticks: {
+              callback: function (value, index, values) {
+                return value + " %";
+              },
+            },
+          },
+        },
+        elements: {
+          line: {
+            borderWidth: 3,
+          },
+        },
+      },
+    });
+  }, 1000);
+}
+  </script>
 </body>
 
 </html>

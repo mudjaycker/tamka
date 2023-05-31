@@ -4,7 +4,7 @@ let gotoAuthBtn = document.getElementById("login-or-signup");
 let currentLevel = null;
 let changeLangBtn = document.getElementById("lang");
 let langMap = { english, français };
-// langMap[store.get("language").type]();
+langMap[store.get("language").type]();
 let setLangMap = {
   english: () => {
     store.set("language", { type: "français" });

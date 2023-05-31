@@ -1,12 +1,14 @@
 # mypy: disable-error-code="no-any-return"
 import eel
 from pathlib import Path
-from .models.views import TamkaView, UserView, GameView
-from .stt_tts.speech2text import TamkaListener
+from models.views import TamkaView, UserView, GameView
+from stt_tts.speech2text import TamkaListener
+from stt_tts.text2speech import TamkaSpeaker
 
 
 UI_DIR = Path(__file__).parent.parent
 eel.init(str(Path(UI_DIR, "desktop_ui")))
+
 
 @eel.expose
 def do_authentication(username: str, password: str, action: str):
@@ -17,11 +19,29 @@ def do_authentication(username: str, password: str, action: str):
         "signup": user.create,
         "delete": user.delete,
     }
-    
+
     return actions_map[action]()
 
+
 @eel.expose
-def do_recognition(language):
+def do_recognition(language: str):
     listener = TamkaListener(language)
     text = listener.run_recognition()
     eel.sayToSystem(text)
+
+
+# @eel.expose
+def do_speak_challenge(language: str):
+    first_words = {
+        "english": "say: ",
+        "français": "dites: "
+    }
+    message = "Do you wanna speak ?"
+    speaker = TamkaSpeaker(
+        message=first_words[language]+message,
+        language=language
+    )
+    speaker.speak()
+
+
+do_speak_challenge("english")

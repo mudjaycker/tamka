@@ -1,35 +1,18 @@
-function sayToSystem(message) {
+function sayToSystem(toSay) {
   let element = new Element();
   let conversation = element.select("conversation");
-
-  let userMsg = element.create({
-    classList: ["msg", "sent-msg"]
-  })
-
+  let receivedMsg = element.create({
+    classList: ["msg", "received-msg"],
+  });
   let paragraph = element.create({
-    type: "p",
-    text: message
-  })
+    type: "paragraph",
+    text: toSay,
+  });
 
-  element.append(userMsg, paragraph)
-  element.append(conversation, userMsg)
-  let centerSide = document.getElementById('center')
-  centerSide.scrollTop = centerSide.scrollHeight
+  element.append(receivedMsg, paragraph);
+  element.append(conversation, receivedMsg);
+
+  let centerSide = document.getElementById("center");
+  centerSide.scrollTop = centerSide.scrollHeight;
 }
-
-eel.expose(sayToSystem)
-
-// L´ancienne méthode:
-/*
-function sendMessage(msg) {
-let conversation = document.getElementById('conversation')
-let userMsg = document.createElement("div")
-let classeNames = ["msg", "sent-msg"]
-classeNames.forEach(classeName => userMsg.classList.add(classeName))
-
-let paragraph = document.createElement("p")
-paragraph.textContent = msg
-userMsg.appendChild(paragraph)
-conversation.appendChild(userMsg)
-}
-*/
+eel.expose(sayToSystem);

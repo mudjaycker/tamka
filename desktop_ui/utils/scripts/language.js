@@ -74,8 +74,10 @@ gotoAuthBtn.textContent = gotoAuthLang[getLanguage()]["signup"];
 function getSentences(level) {
   let lang = getLanguage();
   currentLevel = level;
-  // eel.start_speaker(lang, level);
-  eel.do_recognition(lang);
+  eel.do_speak_challenge(lang, level)(msgs => {
+    if(msgs > -1)
+      eel.do_recognition(lang);
+  });
 }
 
 function setSuccessPoints() {
